@@ -14,7 +14,128 @@ datasource db {
 }
 
 model Account {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
+  accountId   String @id @default(uuid())
+  username    String
+  email       String @unique
+  password    String
+  phoneNumber String
+  location    String
+  role        Role
+
+  Renter    Renter?
+  Owner     Owner?
+  Admin     Admin?
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+model Admin {
+  adminId   String  @id @default(uuid())
+  accountId String  @unique
+  account   Account @relation(fields: [accountId], references: [accountId])
+}
+
+model Renter {
+  renterId   String       @id @default(uuid())
+  accountId  String       @unique
+  account    Account      @relation(fields: [accountId], references: [accountId])
+  address    String // shipping address
+  BookRental BookRental[]
+}
+
+model Owner {
+  ownerId     String          @id @default(uuid())
+  accountId   String          @unique
+  account     Account         @relation(fields: [accountId], references: [accountId])
+  isApproved  Boolean         @default(false)
+  BookCatalog BookCatalog[]
+  BookStock   BookInventory[]
+  Revenue     Revenue[]
+}
+
+model BookCatalog {
+  bookId   String         @id @default(uuid())
+  title    String
+  author   String
+  category String
+  status   ApprovalStatus @default(PENDING)
+
+  uploaderId    String
+  uploader      Owner           @relation(fields: [uploaderId], references: [ownerId])
+  BookInventory BookInventory[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model BookInventory {
+  bookInventoryId String       @id @default(uuid())
+  bookId          String
+  book            BookCatalog  @relation(fields: [bookId], references: [bookId])
+  ownerId         String
+  owner           Owner        @relation(fields: [ownerId], references: [ownerId])
+  totalCopies     Int
+  availableCopies Int
+  rentedCopies    Int
+  pricePerDay     Float
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  BookRental      BookRental[]
+  Revenue         Revenue[]
+}
+
+model BookRental {
+  rentalId        String        @id @default(uuid())
+  renterId        String
+  renter          Renter        @relation(fields: [renterId], references: [renterId])
+  bookInventoryId String
+  bookInventory   BookInventory @relation(fields: [bookInventoryId], references: [bookInventoryId])
+
+  rentedCopies    Int
+  totalDays       Int
+  totalPrice      Float
+  rentalStartDate DateTime
+  rentalEndDate   DateTime
+  returnDate      DateTime?
+  status          RentalStatus
+}
+
+model Revenue {
+  revenueId           String        @id @default(uuid())
+  ownerId             String
+  owner               Owner         @relation(fields: [ownerId], references: [ownerId])
+  bookInventoryId     String
+  bookInventory       BookInventory @relation(fields: [bookInventoryId], references: [bookInventoryId])
+  month               Int
+  year                Int
+  totalRentals        Int?
+  totalRevenue        Float?
+  totalQuantityRented Int?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+}
+
+enum Role {
+  OWNER
+  RENTER
+  ADMIN
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum RentalStatus {
+  RENTED
+  RETURNED
+}
+
+// enum RentalStatus {
+//   RENTED
+//   RETURNED
+
+//   PENDING
+//   CANCELLED
+//   OVERDUE
+// }
