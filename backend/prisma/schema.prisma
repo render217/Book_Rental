@@ -39,7 +39,7 @@ model Renter {
   renterId   String       @id @default(uuid())
   accountId  String       @unique
   account    Account      @relation(fields: [accountId], references: [accountId])
-  address    String // shipping address
+  address    String?
   BookRental BookRental[]
 }
 
@@ -48,6 +48,7 @@ model Owner {
   accountId   String          @unique
   account     Account         @relation(fields: [accountId], references: [accountId])
   isApproved  Boolean         @default(false)
+  status      OwnerStatus     @default(DISABLED)
   BookCatalog BookCatalog[]
   BookStock   BookInventory[]
   Revenue     Revenue[]
@@ -124,6 +125,11 @@ enum ApprovalStatus {
   PENDING
   APPROVED
   REJECTED
+}
+
+enum OwnerStatus {
+  ACTIVE
+  DISABLED
 }
 
 enum RentalStatus {

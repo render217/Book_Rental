@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import routes from "./routes";
 import notFound from "./middleware/not-found";
 import errorHandler from "./middleware/error-handler";
+import "express-async-errors";
 
 dotenv.config();
 
