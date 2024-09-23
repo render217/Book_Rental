@@ -6,10 +6,15 @@ import MenuBookIcon from "@mui/icons-material/MenuBook";
 import CloseIcon from "@mui/icons-material/Close";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { SIDEBAR_ITEMS, SIDEBAR_ITEMS_2 } from "@/utils/constants";
-import { useLocation, useNavigate } from "react-router-dom";
+
+import { useAuth } from "@/context/auth-provider";
+
+import SideBarNavLink from "./sidebar-nav-link";
 export default function Sidebar() {
     const { isSideBarCollapsed, toggleSideBar, isMinScreen, closeSideBar } =
         useUIStore();
+
+    const { logOutUser } = useAuth();
     return (
         <Box
             sx={{
@@ -120,13 +125,14 @@ export default function Sidebar() {
                         gap: "6px",
                     }}>
                     {SIDEBAR_ITEMS.map((item, index) => {
-                        const { icon, label, path } = item;
+                        const { icon, label, path, name } = item;
                         return (
-                            <CustomNavLink
+                            <SideBarNavLink
                                 key={index}
+                                icon={icon}
                                 label={label}
-                                Icon={icon}
                                 path={path}
+                                name={name}
                             />
                         );
                     })}
@@ -136,18 +142,20 @@ export default function Sidebar() {
                     </Box>
 
                     {SIDEBAR_ITEMS_2.map((item, index) => {
-                        const { icon, label, path } = item;
+                        const { icon, label, path, name } = item;
                         return (
-                            <CustomNavLink
+                            <SideBarNavLink
                                 key={index}
+                                icon={icon}
                                 label={label}
-                                Icon={icon}
                                 path={path}
+                                name={name}
                             />
                         );
                     })}
                 </Stack>
                 <Box
+                    onClick={logOutUser}
                     sx={{
                         bottom: "12px",
                         marginInline:
@@ -191,62 +199,6 @@ export default function Sidebar() {
                     </Typography>
                 </Box>
             </Box>
-        </Box>
-    );
-}
-function CustomNavLink({
-    Icon,
-    label,
-    path,
-}: {
-    Icon: JSX.Element;
-    label: string;
-    path: string;
-}) {
-    const { isSideBarCollapsed } = useUIStore();
-    const navigate = useNavigate();
-    const location = useLocation();
-    const isActive = location.pathname === path;
-    return (
-        <Box
-            onClick={() => navigate(path)}
-            sx={{
-                paddingInline: "6px",
-                paddingBlock: "2px",
-                // marginBottom: "12px",
-                // height: "40px",
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                gap: "10px",
-                // border: "1px solid white",
-                backgroundColor: isActive ? "#00ABFF" : "",
-                borderRadius: "8px",
-                cursor: "pointer",
-                color: "white",
-                opacity: isActive ? "1" : ".75",
-                "&:hover": {
-                    backgroundColor: "#00ABFF",
-                    transition: "all .1s ease-in-out",
-                    color: "white",
-                    opacity: "1",
-                },
-            }}>
-            <IconButton disableRipple sx={{ color: "white" }}>
-                {Icon}
-            </IconButton>
-
-            <Typography
-                variant="h6"
-                sx={{
-                    fontSize: "16px",
-                    whiteSpace: "nowrap",
-                    opacity: isSideBarCollapsed ? 0 : 1,
-                    visibility: isSideBarCollapsed ? "hidden" : "visible",
-                    transition: "all .3s ease-in-out",
-                }}>
-                {label}
-            </Typography>
         </Box>
     );
 }

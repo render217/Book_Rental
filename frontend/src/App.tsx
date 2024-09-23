@@ -1,16 +1,17 @@
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AllRoutes from "./routes";
-
-const queryClient = new QueryClient();
-
+import AuthProvider from "./context/auth-provider";
+import AbilityProvider from "./context/ability-provider";
+import QueryProvider from "./services/react-query/QueryProvider";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
     return (
-        <QueryClientProvider client={queryClient}>
-            <AllRoutes />
-            <ReactQueryDevtools initialIsOpen={false} />
-        </QueryClientProvider>
+        <QueryProvider>
+            <AuthProvider>
+                <AbilityProvider>
+                    <AllRoutes />
+                </AbilityProvider>
+            </AuthProvider>
+        </QueryProvider>
     );
 }
 

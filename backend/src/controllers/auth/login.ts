@@ -10,6 +10,7 @@ import {
 } from "../../utils/mapper";
 const loginUser = async (req: Request, res: Response) => {
     const { email, password } = req.body;
+    console.log(req.body);
     if (!email || !password) {
         return res.status(400).json({
             message: "Please fill in all fields",
@@ -26,7 +27,7 @@ const loginUser = async (req: Request, res: Response) => {
     const isPasswordValid = compareSync(password, account?.password! || "");
 
     if (!account || !isPasswordValid) {
-        return res.status(401).json({
+        return res.status(400).json({
             message: "Invalid email or password",
         });
     }
@@ -40,7 +41,7 @@ const loginUser = async (req: Request, res: Response) => {
                 },
             });
             if (!owner) {
-                return res.status(401).json({
+                return res.status(400).json({
                     message: "Invalid email or password",
                 });
             }
@@ -54,7 +55,7 @@ const loginUser = async (req: Request, res: Response) => {
                 },
             });
             if (!renter) {
-                return res.status(401).json({
+                return res.status(400).json({
                     message: "Invalid email or password",
                 });
             }
@@ -68,7 +69,7 @@ const loginUser = async (req: Request, res: Response) => {
             });
 
             if (!admin) {
-                return res.status(401).json({
+                return res.status(400).json({
                     message: "Invalid email or password",
                 });
             }

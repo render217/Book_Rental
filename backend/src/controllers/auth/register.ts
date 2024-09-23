@@ -4,17 +4,10 @@ import { hashSync, compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Role } from "@prisma/client";
 const registerUser = async (req: Request, res: Response) => {
-    const { email, password, phoneNumber, location, role, username } = req.body;
-
+    const { email, password, phoneNumber, location, role } = req.body;
+    console.log({ ...req.body });
     // validation
-    if (
-        !email ||
-        !password ||
-        !phoneNumber ||
-        !location ||
-        !role ||
-        !username
-    ) {
+    if (!email || !password || !phoneNumber || !location || !role) {
         return res.status(400).json({ message: "Please fill in all fields" });
     }
     // check if user already exists
@@ -31,7 +24,7 @@ const registerUser = async (req: Request, res: Response) => {
     // create user
     const newAccount = await prisma.account.create({
         data: {
-            username,
+            username: "username",
             email,
             password: hashSync(password, 10),
             phoneNumber,
