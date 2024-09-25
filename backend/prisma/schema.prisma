@@ -44,14 +44,14 @@ model Renter {
 }
 
 model Owner {
-  ownerId     String          @id @default(uuid())
-  accountId   String          @unique
-  account     Account         @relation(fields: [accountId], references: [accountId])
-  isApproved  Boolean         @default(false)
-  status      OwnerStatus     @default(DISABLED)
-  BookCatalog BookCatalog[]
-  BookStock   BookInventory[]
-  Revenue     Revenue[]
+  ownerId       String          @id @default(uuid())
+  accountId     String          @unique
+  account       Account         @relation(fields: [accountId], references: [accountId])
+  isApproved    Boolean         @default(false)
+  status        OwnerStatus     @default(DISABLED)
+  BookCatalog   BookCatalog[]
+  BookInventory BookInventory[]
+  Revenue       Revenue[]
 }
 
 model BookCatalog {
@@ -61,8 +61,8 @@ model BookCatalog {
   category String
   status   ApprovalStatus @default(PENDING)
 
-  uploaderId    String
-  uploader      Owner           @relation(fields: [uploaderId], references: [ownerId])
+  uploaderId    String?
+  uploader      Owner?          @relation(fields: [uploaderId], references: [ownerId])
   BookInventory BookInventory[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -101,18 +101,19 @@ model BookRental {
 }
 
 model Revenue {
-  revenueId           String        @id @default(uuid())
-  ownerId             String
-  owner               Owner         @relation(fields: [ownerId], references: [ownerId])
-  bookInventoryId     String
-  bookInventory       BookInventory @relation(fields: [bookInventoryId], references: [bookInventoryId])
-  month               Int
-  year                Int
+  revenueId       String        @id @default(uuid())
+  ownerId         String
+  owner           Owner         @relation(fields: [ownerId], references: [ownerId])
+  bookInventoryId String
+  bookInventory   BookInventory @relation(fields: [bookInventoryId], references: [bookInventoryId])
+  month           Int
+  year            Int
+
   totalRentals        Int?
   totalRevenue        Float?
   totalQuantityRented Int?
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 }
 
 enum Role {

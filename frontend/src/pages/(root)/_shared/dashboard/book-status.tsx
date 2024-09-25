@@ -1,11 +1,13 @@
 import { Box } from "@mui/material";
+import BookStatusTable from "./components/bookstatus-table";
 export default function BookStatus() {
     return (
-        <Box sx={{ backgroundColor: "white" }}>
-            <Box>Book status</Box>
-            {[...new Array(10)].map((_, idx) => {
-                return <p key={idx}>Lorem ipsum dolor sit.</p>;
-            })}
+        <Box
+            sx={{
+                backgroundColor: "white",
+                overflowX: "hidden",
+            }}>
+            <BookStatusTable />
         </Box>
     );
 }

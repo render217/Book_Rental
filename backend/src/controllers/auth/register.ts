@@ -4,10 +4,17 @@ import { hashSync, compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Role } from "@prisma/client";
 const registerUser = async (req: Request, res: Response) => {
-    const { email, password, phoneNumber, location, role } = req.body;
+    const { username, email, password, phoneNumber, location, role } = req.body;
     console.log({ ...req.body });
     // validation
-    if (!email || !password || !phoneNumber || !location || !role) {
+    if (
+        !username ||
+        !email ||
+        !password ||
+        !phoneNumber ||
+        !location ||
+        !role
+    ) {
         return res.status(400).json({ message: "Please fill in all fields" });
     }
     // check if user already exists
@@ -24,7 +31,7 @@ const registerUser = async (req: Request, res: Response) => {
     // create user
     const newAccount = await prisma.account.create({
         data: {
-            username: "username",
+            username,
             email,
             password: hashSync(password, 10),
             phoneNumber,
@@ -45,7 +52,8 @@ const registerUser = async (req: Request, res: Response) => {
                 accountId: newAccount.accountId,
             },
         });
-        //   don't forget to comment it admin role should be seeded in db manually
+
+        // will delete this later admin should be seeded to db manually.
     } else if (newAccount.role === Role.ADMIN) {
         await prisma.admin.create({
             data: {

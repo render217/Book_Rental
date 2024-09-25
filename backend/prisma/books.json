@@ -1,0 +1,152 @@
+[
+    {
+        "title": "The Power of Now",
+        "author": "Eckhart Tolle",
+        "category": "self-help"
+    },
+    {
+        "title": "Atomic Habits",
+        "author": "James Clear",
+        "category": "self-help"
+    },
+    {
+        "title": "The 7 Habits of Highly Effective People",
+        "author": "Stephen R. Covey",
+        "category": "self-help"
+    },
+    {
+        "title": "How to Win Friends and Influence People",
+        "author": "Dale Carnegie",
+        "category": "self-help"
+    },
+    {
+        "title": "Think and Grow Rich",
+        "author": "Napoleon Hill",
+        "category": "self-help"
+    },
+    {
+        "title": "The Subtle Art of Not Giving a F*ck",
+        "author": "Mark Manson",
+        "category": "self-help"
+    },
+    {
+        "title": "You Are a Badass",
+        "author": "Jen Sincero",
+        "category": "self-help"
+    },
+    {
+        "title": "Awaken the Giant Within",
+        "author": "Tony Robbins",
+        "category": "self-help"
+    },
+    {
+        "title": "The Four Agreements",
+        "author": "Don Miguel Ruiz",
+        "category": "self-help"
+    },
+    {
+        "title": "Daring Greatly",
+        "author": "Brené Brown",
+        "category": "self-help"
+    },
+    {
+        "title": "To Kill a Mockingbird",
+        "author": "Harper Lee",
+        "category": "fiction"
+    },
+    {
+        "title": "1984",
+        "author": "George Orwell",
+        "category": "fiction"
+    },
+    {
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "category": "fiction"
+    },
+    {
+        "title": "Pride and Prejudice",
+        "author": "Jane Austen",
+        "category": "fiction"
+    },
+    {
+        "title": "The Catcher in the Rye",
+        "author": "J.D. Salinger",
+        "category": "fiction"
+    },
+    {
+        "title": "Good to Great",
+        "author": "Jim Collins",
+        "category": "business"
+    },
+    {
+        "title": "The Lean Startup",
+        "author": "Eric Ries",
+        "category": "business"
+    },
+    {
+        "title": "Thinking, Fast and Slow",
+        "author": "Daniel Kahneman",
+        "category": "business"
+    },
+    {
+        "title": "Zero to One",
+        "author": "Peter Thiel",
+        "category": "business"
+    },
+    {
+        "title": "The Innovator's Dilemma",
+        "author": "Clayton M. Christensen",
+        "category": "business"
+    },
+    {
+        "title": "Steve Jobs",
+        "author": "Walter Isaacson",
+        "category": "biography"
+    },
+    {
+        "title": "The Diary of a Young Girl",
+        "author": "Anne Frank",
+        "category": "biography"
+    },
+    {
+        "title": "Long Walk to Freedom",
+        "author": "Nelson Mandela",
+        "category": "biography"
+    },
+    {
+        "title": "Becoming",
+        "author": "Michelle Obama",
+        "category": "biography"
+    },
+    {
+        "title": "Alexander Hamilton",
+        "author": "Ron Chernow",
+        "category": "biography"
+    },
+    {
+        "title": "Clean Code: A Handbook of Agile Software Craftsmanship",
+        "author": "Robert C. Martin",
+        "category": "programming"
+    },
+    {
+        "title": "The Pragmatic Programmer: Your Journey to Mastery",
+        "author": "Andrew Hunt, David Thomas",
+        "category": "programming"
+    },
+    {
+        "title": "Code Complete: A Practical Handbook of Software Construction",
+        "author": "Steve McConnell",
+        "category": "programming"
+    },
+    {
+        "title": "You Don't Know JS: Scope & Closures",
+        "author": "Kyle Simpson",
+        "category": "programming"
+    },
+    {
+        "title": "Design Patterns: Elements of Reusable Object-Oriented Software",
+        "author": "Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides",
+        "category": "programming"
+    }
+]

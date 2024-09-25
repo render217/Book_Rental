@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -13,7 +14,7 @@ export default function QueryProvider({
     return (
         <QueryClientProvider client={queryClient}>
             {children}
-            <ReactQueryDevtools initialIsOpen={false} />
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
             <ToastProvider />
         </QueryClientProvider>
     );

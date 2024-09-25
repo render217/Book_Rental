@@ -11,6 +11,12 @@ export type IUser = {
     status?: string;
 };
 
+export type IOwner = IUser & {
+    role: Role_Enum.OWNER;
+    status: OwnerStatus_Enum;
+    isApproved: boolean;
+};
+
 export enum Role_Enum {
     OWNER = "OWNER",
     RENTER = "RENTER",
@@ -32,3 +38,13 @@ export enum RentalStatus_Enum {
     RENTED = "RENTED",
     RETURNED = "RETURNED",
 }
+
+export type IBookStatus = {
+    id: string;
+    title: string;
+    totalCopies: number;
+    availableCopies: number;
+    rentedCopies: number;
+    pricePerDay: number;
+    owner: IOwner;
+};

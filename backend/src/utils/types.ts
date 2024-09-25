@@ -9,4 +9,5 @@ export type IUser = {
     address?: string | null;
     isApproved?: boolean;
     status?: string;
+    //
 };

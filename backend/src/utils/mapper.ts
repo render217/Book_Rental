@@ -1,4 +1,11 @@
-import { Renter, Account, Owner, Admin } from "@prisma/client";
+import {
+    Renter,
+    Account,
+    Owner,
+    Admin,
+    BookInventory,
+    BookCatalog,
+} from "@prisma/client";
 import { IUser } from "./types";
 export const mapRenterToUser = (renter: Renter, account: Account): IUser => {
     return {
@@ -33,5 +40,30 @@ export const mapAdminToUser = (admin: Admin, account: Account): IUser => {
         phoneNumber: account.phoneNumber,
         location: account.location,
         role: account.role,
+    };
+};
+
+export const mapToPublicUser = (account: Account) => {
+    return {
+        username: account.username,
+        email: account.email,
+        phoneNumber: account.phoneNumber,
+        location: account.location,
+    };
+};
+
+export const mapBookInventory = (
+    inventory: BookInventory,
+    book: BookCatalog,
+    owner: Owner,
+    account: Account
+) => {
+    return {
+        id: inventory.bookInventoryId,
+        title: book.title,
+        totalCopies: inventory.totalCopies,
+        rentedCopies: inventory.rentedCopies,
+        pricePerDay: inventory.pricePerDay,
+        owner: mapOwnerToUser(owner, account),
     };
 };

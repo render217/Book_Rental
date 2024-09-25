@@ -10,3 +10,19 @@ body {
     /* background-color: #f0f2ff; */
     margin: 0px;
 }
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar {
+    right: 0;
+    width: 12px;
+    height: 12px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #999;
+    border-radius: 8px;
+    width: 12px;
+    height: 12px;
+}

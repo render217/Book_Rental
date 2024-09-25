@@ -1,3 +1,9 @@
+import UnderConstruction from "../under-construction";
+
 export default function Notifications() {
-    return <div>Notifications</div>;
+    return (
+        <>
+            <UnderConstruction />
+        </>
+    );
 }

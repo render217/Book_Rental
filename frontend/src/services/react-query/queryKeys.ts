@@ -1,13 +1,20 @@
 export enum QUERY_KEYS {
-    // AUTH KEYS
-    CREATE_USER_ACCOUNT = "createUserAccount",
-
     // USER KEYS
     GET_CURRENT_USER = "getCurrentUser",
 
-    // BOOKS KEYS
-    GET_POSTS = "getPosts",
+    GET_OWNERS = "getOwners",
 
-    //  SEARCH KEYS
-    SEARCH_BOOKS = "getSearchPosts",
+    // BOOK CATALOG KEYS
+    GET_BOOKS_CATALOG = "getBooksCatalog",
+    GET_BOOKS_STATISTICS = "getBooksStatistics",
+
+    // BOOK INVENTORY KEYS
+    GET_BOOKS_INVENTORY = "getBooksInventory",
+    GET_BOOK_INVENTORY_STATISTICS = "getBookInventoryStatistics",
+
+    // BOOK RENTAL KEYS
+    GET_RENTALS = "getRentals",
+    // OWNER REVENUE KEYS
+    GET_OWNERS_REVENUE = "getOwnerRevenue",
+    GET_OWNERS_MINE_REVENUES = "getOwnerRevenues",
 }

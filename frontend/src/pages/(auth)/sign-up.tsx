@@ -13,6 +13,7 @@ export default function SignUp() {
     const submitForm = async (values: SignInFormValues | SignUpFormValues) => {
         const val = values as SignUpFormValues;
         const payload = {
+            username: val.username,
             email: val.email,
             password: val.password,
             role: val.role,

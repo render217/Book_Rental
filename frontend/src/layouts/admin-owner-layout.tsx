@@ -42,7 +42,7 @@ export default function AdminOwnerLayout() {
                             component={"main"}
                             sx={{
                                 minHeight: "calc(100vh - 95px)",
-                                maxWidth: "1500px",
+                                maxWidth: "1600px",
                                 marginInline: "auto",
                             }}>
                             <Outlet />

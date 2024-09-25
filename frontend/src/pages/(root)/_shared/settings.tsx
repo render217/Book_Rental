@@ -1,3 +1,9 @@
+import UnderConstruction from "../under-construction";
+
 export default function Settings() {
-    return <div>Settings</div>;
+    return (
+        <>
+            <UnderConstruction />
+        </>
+    );
 }

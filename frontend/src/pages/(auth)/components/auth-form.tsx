@@ -5,6 +5,7 @@ import {
     Checkbox,
     Divider,
     FormControlLabel,
+    Grid2,
     IconButton,
     InputAdornment,
     Stack,
@@ -34,6 +35,7 @@ const signInSchema = z.object({
 //  Zod schema for SignUp
 const signUpSchema = z
     .object({
+        username: z.string().min(4, "Usenrame must be at least 4 characters"),
         email: z
             .string()
             .min(1, "Email is required")
@@ -75,6 +77,7 @@ export default function AuthForm({
         resolver: zodResolver(schema),
         defaultValues: isSignUp
             ? {
+                  username: "",
                   email: "",
                   password: "",
                   confirmPassword: "",
@@ -135,6 +138,18 @@ export default function AuthForm({
                 </Box>
                 <form noValidate onSubmit={handleSubmit(onSubmitCallback)}>
                     <Stack spacing={2.5} marginBottom={2}>
+                        {isSignUp && (
+                            <TextField
+                                size="small"
+                                label="Username"
+                                {...register("username")}
+                                //@ts-expect-error - only shown for sign-up form
+                                error={!!errors.username}
+                                //@ts-expect-error - only shown for sign-up form
+                                helperText={errors.username?.message}
+                                disabled={isFormSubmitting}
+                            />
+                        )}
                         <TextField
                             size="small"
                             label="Email"
@@ -216,26 +231,38 @@ export default function AuthForm({
                                         },
                                     }}
                                 />
-                                <TextField
-                                    size="small"
-                                    label="Location"
-                                    {...register("location")}
-                                    //@ts-expect-error - only shown for sign-up form
-                                    error={!!errors.location}
-                                    //@ts-expect-error - only shown for sign-up form
-                                    helperText={errors.location?.message}
-                                    disabled={isFormSubmitting}
-                                />
-                                <TextField
-                                    size="small"
-                                    label="Phone Number"
-                                    {...register("phoneNumber")}
-                                    //@ts-expect-error - only shown for sign-up form
-                                    error={!!errors.phoneNumber}
-                                    //@ts-expect-error - only shown for sign-up form
-                                    helperText={errors.phoneNumber?.message}
-                                    disabled={isFormSubmitting}
-                                />
+                                <Grid2 container spacing={2}>
+                                    <Grid2 size={{ xs: 6 }}>
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            label="Location"
+                                            {...register("location")}
+                                            //@ts-expect-error - only shown for sign-up form
+                                            error={!!errors.location}
+                                            helperText={
+                                                //@ts-expect-error - only shown for sign-up form
+                                                errors.location?.message
+                                            }
+                                            disabled={isFormSubmitting}
+                                        />
+                                    </Grid2>
+                                    <Grid2 size={{ xs: 6 }}>
+                                        <TextField
+                                            fullWidth
+                                            size="small"
+                                            label="Phone Number"
+                                            {...register("phoneNumber")}
+                                            //@ts-expect-error - only shown for sign-up form
+                                            error={!!errors.phoneNumber}
+                                            helperText={
+                                                //@ts-expect-error - only shown for sign-up form
+                                                errors.phoneNumber?.message
+                                            }
+                                            disabled={isFormSubmitting}
+                                        />
+                                    </Grid2>
+                                </Grid2>
                                 <Stack spacing={0.1}>
                                     <FormControlLabel
                                         label={
