@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { mapOwnerToUser } from "../../utils/mapper";
 const getOwners = async (req: Request, res: Response) => {
     const owners = await prisma.owner.findMany({

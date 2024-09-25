@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { mapOwnerToUser } from "../../utils/mapper";
 const getOwnersDetail = async (req: Request, res: Response) => {
     const ownerId = req.params.id;

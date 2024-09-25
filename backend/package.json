@@ -8,7 +8,7 @@
         "prisma:migrate-dev": "prisma migrate dev",
         "prisma:migrate": "prisma migrate deploy",
         "dev-build": "npx tsc",
-        "build": "npm install && npx tsc",
+        "build": "npx tsc",
         "start": "node dist/server.js"
     },
     "keywords": [],

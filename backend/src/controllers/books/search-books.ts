@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 // import { PrismaClient } from "@prisma/client";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { Role, ApprovalStatus } from "@prisma/client";
 import { mapOwnerToUser } from "../../utils/mapper";
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Prisma } from "@prisma/client";
 const getBookInventoryStatistics = async (req: Request, res: Response) => {
     const user = req.user!; // Assume req.user is populated with the current logged-in user

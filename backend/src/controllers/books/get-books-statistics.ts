@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 
 const getBooksStatistics = async (req: Request, res: Response) => {
     const bookStatistics = await prisma.bookCatalog.groupBy({

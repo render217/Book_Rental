@@ -1,6 +1,11 @@
 import { PrismaClient, ApprovalStatus, Role } from "@prisma/client";
-import { bookJSON, bookSeedData } from "./db";
+import path from "node:path";
+import fs from "node:fs";
+
 const prisma = new PrismaClient();
+
+export const bookJSON = path.join(__dirname, "books.json");
+export const bookSeedData = fs.readFileSync(bookJSON, "utf-8");
 
 // Function to seed books
 async function seedBooks() {

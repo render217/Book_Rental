@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { ApprovalStatus, Role } from "@prisma/client";
 // import { PrismaClient } from "@prisma/client";
 const updateBookStatus = async (req: Request, res: Response) => {

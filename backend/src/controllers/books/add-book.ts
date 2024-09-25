@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus } from "@prisma/client";
 const addBook = async (req: Request, res: Response) => {
     const { title, author, category } = req.body;

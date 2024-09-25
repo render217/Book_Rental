@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { mapOwnerToUser } from "../../utils/mapper";
 
 import { Role } from "@prisma/client";

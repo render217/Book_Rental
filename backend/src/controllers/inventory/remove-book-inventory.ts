@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus } from "@prisma/client";
 import { mapBookInventory } from "../../utils/mapper";
 

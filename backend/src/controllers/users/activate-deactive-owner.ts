@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { OwnerStatus } from "@prisma/client";
 import { mapOwnerToUser } from "../../utils/mapper";
 const activateDeactivateOwner = async (req: Request, res: Response) => {

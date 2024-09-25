@@ -3,7 +3,7 @@
     - no time do only this.(to be shown in dashboard ui.)
 */
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Revenue } from "@prisma/client";
 import { mapOwnerToUser } from "../../utils/mapper";
 const getOwnersRevenue = async (req: Request, res: Response) => {

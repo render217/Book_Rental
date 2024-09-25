@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { prisma } from "../../prisma/db";
+import { prisma } from "../prisma/db";
 import { Role } from "@prisma/client";
 import {
     mapAdminToUser,

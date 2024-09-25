@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { prisma } from "../../../prisma/db";
+import { prisma } from "../../prisma/db";
 import { hashSync, compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Role } from "@prisma/client";
