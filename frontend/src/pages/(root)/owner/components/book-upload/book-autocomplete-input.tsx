@@ -14,6 +14,7 @@ import {
 import BookCatalogForm from "./book-catalog-form";
 import { useState } from "react";
 import { BookInventoryFormType } from "./book-inventory-form";
+import { useForm, UseFormRegister } from "react-hook-form";
 export default function BookAutoCompeleteInput({
     onSelect,
     error,
@@ -21,12 +22,17 @@ export default function BookAutoCompeleteInput({
 }: {
     onSelect: (value: string) => void;
     error?: { message?: string };
-    register: (name: keyof BookInventoryFormType) => unknown;
+    register: UseFormRegister<{
+        id: string;
+        pricePerDay: number;
+        quantity: number;
+    }>;
 }) {
     const [open, setOpen] = useState(false);
     const { data } = useBooksCatalog();
 
     const booksCatalogData = data ?? [];
+
     return (
         <>
             <Autocomplete
@@ -49,6 +55,9 @@ export default function BookAutoCompeleteInput({
                         size="small"
                         sx={{ fontSize: "12px" }}
                         {...params}
+                        // {...register("id", {
+                        //     setValueAs: (value) => value,
+                        // })}
                         error={!!error}
                         helperText={error?.message}
                         label="Select an option"

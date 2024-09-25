@@ -65,7 +65,7 @@ export const bookColumns = [
         Cell: ({ row }) => {
             const uploader =
                 row.original.uploader !== null
-                    ? row.original.uploader.username
+                    ? row.original.uploader?.username
                     : "Admin";
             return (
                 <Typography sx={{ fontSize: "14px" }}>{uploader}</Typography>

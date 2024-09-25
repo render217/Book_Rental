@@ -19,7 +19,12 @@ import {
     getOwnerDetail,
     getOwners,
 } from "../users.services";
-import { getBooksInventory } from "../book-inventory.service";
+import {
+    addBookInventory,
+    getBooksInventory,
+    removeBookFromInventory,
+    updateBookInventory,
+} from "../book-inventory.service";
 
 // AUTH
 export const useLoginUser = () => {
@@ -145,6 +150,43 @@ export const useGetBooksInventory = (query = "") => {
     });
 };
 
+export const useAddBookInventory = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (payload: unknown) => await addBookInventory(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_BOOKS_INVENTORY],
+            });
+        },
+    });
+};
+
+export const useUpdateBookInventory = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, payload }: { id: string; payload: unknown }) =>
+            await updateBookInventory(id, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_BOOKS_INVENTORY],
+            });
+        },
+    });
+};
+
+export const useRemoveBookFromInventory = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, payload }: { id: string; payload: unknown }) =>
+            await removeBookFromInventory(id, payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_BOOKS_INVENTORY],
+            });
+        },
+    });
+};
 // BOOK RENTAL
 
 // OWNER REVENUE

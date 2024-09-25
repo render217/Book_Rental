@@ -4,6 +4,7 @@ import { IUser } from "@/types";
 import { useCurrentUser } from "@/services/react-query/queries";
 import Cookies from "js-cookie";
 import { COOKIE_TOKEN } from "@/utils/constants";
+import InitialLoad from "@/pages/(root)/intial-load";
 
 const INITAL_USER: IUser = {
     id: "",
@@ -78,7 +79,7 @@ export default function AuthProvider({
     };
     return (
         <AuthContext.Provider value={value}>
-            {isLoading ? null : children}
+            {isLoading ? <InitialLoad /> : children}
         </AuthContext.Provider>
     );
 }

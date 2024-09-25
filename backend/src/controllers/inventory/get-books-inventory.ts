@@ -23,6 +23,9 @@ const getBooksInventory = async (req: Request, res: Response) => {
                 },
             },
         },
+        orderBy: {
+            createdAt: "desc",
+        },
     });
 
     // Map the data for response

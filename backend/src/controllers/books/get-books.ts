@@ -64,6 +64,7 @@ const getBooks = async (req: Request, res: Response) => {
             title: book.title,
             author: book.author,
             category: book.category,
+            status: book.status,
         };
 
         // Only include status and uploader for admin

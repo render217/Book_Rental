@@ -3,6 +3,9 @@ import BookAutoCompeleteInput from "./book-autocomplete-input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAddBookInventory } from "@/services/react-query/queries";
+import { toast } from "react-toastify";
+import { handleError } from "@/utils/error-utils";
 
 const bookSchema = z.object({
     id: z.string().min(1, "Please select a book"),
@@ -25,6 +28,7 @@ export default function BookInventoryForm() {
         handleSubmit,
         register,
         setValue,
+        reset,
         formState: { errors },
     } = form;
 
@@ -33,8 +37,23 @@ export default function BookInventoryForm() {
         setValue("id", id);
     };
 
-    const onFormSubmission = (data: BookInventoryFormType) => {
-        console.log(data);
+    const { mutateAsync: addBookInventoryMutation } = useAddBookInventory();
+
+    const onFormSubmission = async (data: BookInventoryFormType) => {
+        const payload = {
+            bookId: data.id,
+            pricePerDay: data.pricePerDay,
+            totalCopies: data.quantity,
+        };
+
+        try {
+            const res = await addBookInventoryMutation(payload);
+            toast.success(res?.message || "book added successfully");
+            reset();
+            setValue("id", "");
+        } catch (error) {
+            handleError(error);
+        }
     };
 
     return (

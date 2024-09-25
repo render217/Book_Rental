@@ -27,7 +27,7 @@ const addBookInventory = async (req: Request, res: Response) => {
             status: ApprovalStatus.APPROVED,
         },
     });
-
+    console.log(targetBook);
     if (!targetBook) {
         return res.status(404).json({ message: "Book is not available." });
     }

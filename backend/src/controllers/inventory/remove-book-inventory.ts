@@ -71,7 +71,7 @@ const removeBookInventory = async (req: Request, res: Response) => {
             );
             return res.status(200).json({
                 message:
-                    "All available copies removed, only rented copies remain.",
+                    "All available copies are removed, only rented copies remain.",
                 payload: mappedInventoryBook,
             });
         } else {
@@ -80,7 +80,7 @@ const removeBookInventory = async (req: Request, res: Response) => {
                 where: { bookInventoryId: bookInventoryId },
             });
             return res.status(200).json({
-                message: "All copies removed, inventory deleted.",
+                message: "All copies are deleted",
                 payload: null,
             });
         }

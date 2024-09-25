@@ -32,6 +32,7 @@ const router = createBrowserRouter(
                 <Route path="/sign-up" element={<SignUp />} />
             </Route>
             {/* Private Route */}
+
             <Route element={<ProtectedRouteAuth />}>
                 <Route
                     element={
@@ -90,6 +91,7 @@ const router = createBrowserRouter(
                     </Route>
                 </Route>
             </Route>
+
             <Route path="*" element={<NotFound />} />
         </>
     )
