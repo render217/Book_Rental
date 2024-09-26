@@ -61,7 +61,7 @@ export default function BookInventoryForm() {
             <form noValidate onSubmit={handleSubmit(onFormSubmission)}>
                 <BookAutoCompeleteInput
                     onSelect={handleOnSelect}
-                    register={register}
+                    // register={register}
                     error={errors.id}
                 />
                 <Box sx={{ minHeight: "100px", display: "block" }}></Box>

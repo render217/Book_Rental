@@ -8,25 +8,16 @@ import {
     Typography,
     Divider,
     Button,
-    Dialog,
-    DialogContent,
 } from "@mui/material";
 import BookCatalogForm from "./book-catalog-form";
 import { useState } from "react";
-import { BookInventoryFormType } from "./book-inventory-form";
-import { useForm, UseFormRegister } from "react-hook-form";
+
 export default function BookAutoCompeleteInput({
     onSelect,
     error,
-    register,
 }: {
     onSelect: (value: string) => void;
     error?: { message?: string };
-    register: UseFormRegister<{
-        id: string;
-        pricePerDay: number;
-        quantity: number;
-    }>;
 }) {
     const [open, setOpen] = useState(false);
     const { data } = useBooksCatalog();

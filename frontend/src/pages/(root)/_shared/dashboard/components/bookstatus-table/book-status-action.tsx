@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { IBookStatus, Role_Enum } from "@/types";
 import {
     Button,
@@ -13,7 +12,6 @@ import {
     Typography,
 } from "@mui/material";
 
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
@@ -204,9 +202,11 @@ function DeleteBook({ book }: { book: IBookStatus }) {
         formState: { errors },
     } = form;
 
-    const { mutateAsync: removeBookMutation } = useRemoveBookFromInventory();
+    const { mutateAsync: removeBookMutation, isPending } =
+        useRemoveBookFromInventory();
 
     const handleDeleteSubmit = async (values: BookDeleteFormType) => {
+        if (isPending) return;
         const payload = {
             allCopies: values.allCopies,
             noOfCopiesToRemove: values.quantity,
@@ -324,6 +324,7 @@ function DeleteBook({ book }: { book: IBookStatus }) {
                                 Cancel
                             </Button>
                             <Button
+                                disabled={isPending}
                                 type="submit"
                                 variant="contained"
                                 sx={{

@@ -50,34 +50,34 @@ export const handleError = (error: unknown) => {
             switch (status) {
                 case 400:
                     handle400Error(error, (message) => {
-                        errorLogger(400, { message });
+                        // errorLogger(400, { message });
                         toast.error(message);
                     });
                     break;
                 case 422:
-                    handle422Error(error, (errors) => {
-                        errorLogger(422, { errors });
-                        for (const error of errors) {
-                            for (const key in error) {
-                                toast.error(`${key}: ${error[key]}`);
-                            }
-                        }
+                    handle422Error(error, (_errors) => {
+                        // errorLogger(422, { errors });
+                        // for (const error of errors) {
+                        //     for (const key in error) {
+                        //         toast.error(`${key}: ${error[key]}`);
+                        //     }
+                        // }
                     });
                     break;
                 case 401:
-                    errorLogger(401, null);
+                    // errorLogger(401, null);
                     toast.error("Unauthorized: Please log in to continue.");
                     window.location.href = "/sign-in";
                     break;
                 case 403:
-                    errorLogger(403, null);
+                    // errorLogger(403, null);
                     toast.error(
                         "Forbidden: You do not have permission to perform this action."
                     );
 
                     break;
                 case 404:
-                    errorLogger(404, null);
+                    // errorLogger(404, null);
                     toast.error(
                         "Not Found: The requested resource could not be found."
                     );
@@ -100,8 +100,8 @@ export const handleError = (error: unknown) => {
     }
 };
 
-const errorLogger = (status: number, payload: unknown) => {
-    // console.group("Error status", status);
-    // console.log(payload);
-    // console.groupEnd();
-};
+// const _errorLogger = (_status: number, _payload: unknown) => {
+//     // console.group("Error status", status);
+//     // console.log(payload);
+//     // console.groupEnd();
+// };
