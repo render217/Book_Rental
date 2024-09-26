@@ -1,8 +1,9 @@
 import { createMRTColumnHelper } from "material-react-table";
 
 import { Box, Typography } from "@mui/material";
-import { IBookStatus } from "@/types";
+import { IBookStatus, Role_Enum } from "@/types";
 import BookStatusAction from "./book-status-action";
+import { useAuth } from "@/context/auth-provider";
 // import VisibilityIcon from "@mui/icons-material/Visibility";
 
 const columnHelper = createMRTColumnHelper<IBookStatus>();
@@ -30,13 +31,10 @@ export const bookStatusColumns = [
         header: "Owner",
         size: 10,
         Cell: ({ row }) => {
-            return (
-                <Typography sx={{ fontSize: "14px" }}>
-                    {row.original.owner.username}
-                </Typography>
-            );
+            return <OwnerColumnName ownerName={row.original.owner.username} />;
         },
     }),
+
     columnHelper.accessor("title", {
         header: "Book Name",
         size: 10,
@@ -144,3 +142,11 @@ const CircleWithDot = ({ color = "blue", size = 20 }) => {
         </Box>
     );
 };
+
+function OwnerColumnName({ ownerName }: { ownerName: string }) {
+    const { user } = useAuth();
+    if (user.role === Role_Enum.OWNER) {
+        return <Typography sx={{ fontSize: "14px" }}>You</Typography>;
+    }
+    return <Typography sx={{ fontSize: "14px" }}>{ownerName}</Typography>;
+}

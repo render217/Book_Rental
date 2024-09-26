@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { IBookStatus } from "@/types";
+import { IBookStatus, Role_Enum } from "@/types";
 import {
     Button,
     Dialog,
@@ -26,7 +26,12 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { handleError } from "@/utils/error-utils";
+import { useAuth } from "@/context/auth-provider";
 export default function BookStatusAction({ book }: { book: IBookStatus }) {
+    const { user } = useAuth();
+    if (user.role === Role_Enum.ADMIN) {
+        return null;
+    }
     return (
         <>
             <Stack direction="row" spacing={2} justifyContent="center">
