@@ -63,7 +63,7 @@ function EditBook({ book }: { book: IBookStatus }) {
     } = form;
 
     const [openDialog, setOpenDialog] = useState(false);
-    const { mutateAsync: updateBookInventoryMutation } =
+    const { mutateAsync: updateBookInventoryMutation, isPending } =
         useUpdateBookInventory();
 
     const handleUpdate = async (data: BookUpateFormType) => {
@@ -144,6 +144,7 @@ function EditBook({ book }: { book: IBookStatus }) {
                             </Grid2>
                         </Grid2>
                         <Button
+                            disabled={isPending}
                             type="submit"
                             variant="contained"
                             sx={{

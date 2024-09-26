@@ -11,6 +11,7 @@ export default function OwnerApproveButton({
     const { mutateAsync, isPending } = useApproveOwner();
 
     const handleApprove = async () => {
+        if (isPending) return;
         await mutateAsync(ownerId);
     };
     return (

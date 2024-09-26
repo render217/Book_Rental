@@ -100,9 +100,10 @@ function ViewOwner({ owner }: { owner: IOwner }) {
 function DeleteOwner({ owner }: { owner: IOwner }) {
     const [open, setOpen] = useState(false);
 
-    const { mutateAsync } = useDeleteOwner();
+    const { mutateAsync, isPending } = useDeleteOwner();
 
     const handleOk = async () => {
+        if (isPending) return;
         try {
             await mutateAsync(owner.id);
             toast.success("Owner deleted successfully");
@@ -112,6 +113,7 @@ function DeleteOwner({ owner }: { owner: IOwner }) {
         }
     };
     const handleCancel = () => {
+        if (isPending) return;
         setOpen(false);
     };
     return (
@@ -130,6 +132,7 @@ function DeleteOwner({ owner }: { owner: IOwner }) {
 
                 <DialogActions>
                     <Button
+                        disabled={isPending}
                         variant={"outlined"}
                         size="small"
                         color="warning"
@@ -138,6 +141,7 @@ function DeleteOwner({ owner }: { owner: IOwner }) {
                         Cancel
                     </Button>
                     <Button
+                        disabled={isPending}
                         size="small"
                         variant={"outlined"}
                         onClick={handleOk}>

@@ -37,7 +37,8 @@ export default function BookInventoryForm() {
         setValue("id", id);
     };
 
-    const { mutateAsync: addBookInventoryMutation } = useAddBookInventory();
+    const { mutateAsync: addBookInventoryMutation, isPending } =
+        useAddBookInventory();
 
     const onFormSubmission = async (data: BookInventoryFormType) => {
         const payload = {
@@ -100,6 +101,7 @@ export default function BookInventoryForm() {
                     </Grid2>
                 </Grid2>
                 <Button
+                    disabled={isPending}
                     type="submit"
                     variant="contained"
                     sx={{
