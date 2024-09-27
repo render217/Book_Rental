@@ -2,9 +2,16 @@ import { BookCatalogType } from "@/pages/(root)/admin/components/book-catalogs/b
 import apiClient from "./apiClient";
 
 type GetBookCatalogResponse = BookCatalogType[];
+
+type GetBookCatalogDetailResponse = Omit<
+    BookCatalogType,
+    "status" | "uploader"
+>;
+
 type GetBookStatisticsResponse = {
     category: string;
     count: number;
+    quantity?: number;
 }[];
 export const getBookCatalogs = async (query = "") => {
     const q = query ? `?q=${query}` : "";
@@ -13,7 +20,9 @@ export const getBookCatalogs = async (query = "") => {
 };
 
 export const getBookCatalogDetail = async (id: string) => {
-    const res = await apiClient.get(`/books/${id}`);
+    const res = await apiClient.get<GetBookCatalogDetailResponse>(
+        `/books/${id}`
+    );
     return res.data;
 };
 

@@ -11,8 +11,15 @@ export const getBookInventoryDetail = async (id: string) => {
     return res.data;
 };
 
+type GetBookInventoryStatisticsResponse = {
+    category: string;
+    count: number;
+    quantity: number;
+}[];
 export const getBooksInventoryStatistics = async () => {
-    const res = await apiClient.get(`/inventory/statistics`);
+    const res = await apiClient.get<GetBookInventoryStatisticsResponse>(
+        `/inventory/statistics`
+    );
     return res.data;
 };
 
@@ -31,7 +38,24 @@ export const removeBookFromInventory = async (id: string, payload: unknown) => {
     return res.data;
 };
 
+type SearchBookResponse = {
+    id: string;
+    title: string;
+    author: string;
+    category: string;
+    availableCopies: number;
+    pricePerDay: number;
+    owner: {
+        id: string;
+        username: string;
+        location: string;
+        phoneNumber: string;
+    };
+}[];
+
 export const searchBookInInventory = async (id: string) => {
-    const res = await apiClient.get(`/inventory/books/${id}`);
+    const res = await apiClient.get<SearchBookResponse>(
+        `/inventory/books/${id}`
+    );
     return res.data;
 };

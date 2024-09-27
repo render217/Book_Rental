@@ -8,7 +8,7 @@ import {
 } from "@prisma/client";
 const addRental = async (req: Request, res: Response) => {
     const user = req.user!;
-    const { bookInenvtoryId, noOfDays, quantity } = req.body;
+    const { bookInventoryId, noOfDays, quantity } = req.body;
 
     // simple validation.
     if (!noOfDays || !quantity) {
@@ -39,7 +39,7 @@ const addRental = async (req: Request, res: Response) => {
 
     const bookInventory = await prisma.bookInventory.findUnique({
         where: {
-            bookInventoryId: bookInenvtoryId,
+            bookInventoryId: bookInventoryId,
         },
         include: {
             book: true,
@@ -71,7 +71,7 @@ const addRental = async (req: Request, res: Response) => {
     // create the rental-entry.
     const newRental = await prisma.bookRental.create({
         data: {
-            bookInventoryId: bookInenvtoryId,
+            bookInventoryId: bookInventoryId,
             renterId: user.id,
             rentedCopies: quantityNum,
             totalDays: noOfDaysNum,
@@ -85,7 +85,7 @@ const addRental = async (req: Request, res: Response) => {
     // update the book inventory.
     await prisma.bookInventory.update({
         where: {
-            bookInventoryId: bookInenvtoryId,
+            bookInventoryId: bookInventoryId,
         },
         data: {
             availableCopies: bookInventory.availableCopies - quantityNum,

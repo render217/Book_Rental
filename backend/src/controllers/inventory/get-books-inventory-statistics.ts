@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Prisma } from "@prisma/client";
 const getBookInventoryStatistics = async (req: Request, res: Response) => {
-    const user = req.user!; // Assume req.user is populated with the current logged-in user
+    const user = req.user!;
 
     const where: Prisma.BookInventoryWhereInput = {};
 
@@ -26,7 +26,6 @@ const getBookInventoryStatistics = async (req: Request, res: Response) => {
     const categoryStats: Record<string, { count: number; quantity: number }> =
         {};
 
-    // Loop through the fetched inventory and aggregate counts and quantities by category
     for (const inventory of booksInventory) {
         const category = inventory.book.category; // Get the category of the book
         if (category) {
@@ -44,7 +43,6 @@ const getBookInventoryStatistics = async (req: Request, res: Response) => {
         quantity: stats.quantity,
     }));
 
-    // Return the aggregated response
     return res.status(200).json(response);
 };
 

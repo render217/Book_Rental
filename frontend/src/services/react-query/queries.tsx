@@ -8,6 +8,7 @@ import { QUERY_KEYS } from "./queryKeys";
 import { getCurrentUser, loginUser, registerUser } from "../auth.services";
 import {
     createBookCatalog,
+    getBookCatalogDetail,
     getBookCatalogs,
     getBookCatalogsStatistics,
     updateBookCatalogStatus,
@@ -22,11 +23,26 @@ import {
 import {
     addBookInventory,
     getBooksInventory,
+    getBooksInventoryStatistics,
     removeBookFromInventory,
+    searchBookInInventory,
     updateBookInventory,
 } from "../book-inventory.service";
+import {
+    addRentBook,
+    getRentalHistory,
+    getRentalHistoryDetail,
+    returnBook,
+} from "../book-rental.services";
+import {
+    getAllOwnersRevenue,
+    getOwnerRevenue,
+} from "../owner-revenue.services";
 
-// AUTH
+// ========================================
+//             AUTH
+// ========================================
+
 export const useLoginUser = () => {
     return useMutation({
         // mutationFn: async (payload: unknown) => await loginUser(payload),
@@ -47,7 +63,10 @@ export const useCurrentUser = () => {
     });
 };
 
-// USERS || OWNERS
+// ========================================
+//             USERS || OWNERS
+// ========================================
+
 export const useGetOwners = (query = "") => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_OWNERS, { query }],
@@ -100,7 +119,9 @@ export const useDeleteOwner = () => {
     });
 };
 
-// BOOK CATALOG
+// ========================================
+//              BOOK CATALOG
+// ========================================
 
 export const useBooksCatalog = (query = "") => {
     return useQuery({
@@ -110,11 +131,21 @@ export const useBooksCatalog = (query = "") => {
     });
 };
 
-export const useBookCatalogStatistics = () => {
+export const useGetBookCatalogDetail = (id: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_BOOKS_CATALOG, { id }],
+        queryFn: async () => await getBookCatalogDetail(id),
+        enabled: !!id,
+        placeholderData: keepPreviousData,
+    });
+};
+
+export const useBookCatalogStatistics = (isAdmin: boolean) => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_BOOKS_STATISTICS],
         queryFn: async () => await getBookCatalogsStatistics(),
         placeholderData: keepPreviousData,
+        enabled: isAdmin,
     });
 };
 
@@ -141,7 +172,10 @@ export const useCreateBookCatalog = () => {
     });
 };
 
-// BOOK INVENTORY
+// ========================================
+//             BOOK INVENTORY
+// ========================================
+
 export const useGetBooksInventory = (query = "") => {
     return useQuery({
         queryKey: [QUERY_KEYS.GET_BOOKS_INVENTORY, { query }],
@@ -157,6 +191,9 @@ export const useAddBookInventory = () => {
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_KEYS.GET_BOOKS_INVENTORY],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_BOOK_INVENTORY_STATISTICS],
             });
         },
     });
@@ -184,9 +221,95 @@ export const useRemoveBookFromInventory = () => {
             queryClient.invalidateQueries({
                 queryKey: [QUERY_KEYS.GET_BOOKS_INVENTORY],
             });
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_BOOK_INVENTORY_STATISTICS],
+            });
         },
     });
 };
-// BOOK RENTAL
 
-// OWNER REVENUE
+export const useGetBooksInventoryStatistics = (isOwner: boolean) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_BOOK_INVENTORY_STATISTICS],
+        queryFn: async () => await getBooksInventoryStatistics(),
+        placeholderData: keepPreviousData,
+        enabled: isOwner,
+    });
+};
+
+export const useSearchBookInInventory = (id: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.SEARCH_BOOK_IN_INVENTORY],
+        queryFn: async () => await searchBookInInventory(id),
+        enabled: !!id,
+    });
+};
+
+// ========================================
+//             BOOK RENTAL
+// ========================================
+
+export const useGetRentalHistory = () => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_RENTALS],
+        queryFn: async () => await getRentalHistory(),
+        placeholderData: keepPreviousData,
+    });
+};
+
+export const useGetRentalHistoryDetail = (id: string) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_RENTALS, { id }],
+        queryFn: async () => await getRentalHistoryDetail(id),
+        enabled: !!id,
+        placeholderData: keepPreviousData,
+    });
+};
+
+export const useAddRentBook = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (payload: unknown) => await addRentBook(payload),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RENTALS],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.SEARCH_BOOK_IN_INVENTORY],
+            });
+        },
+    });
+};
+
+export const useReturnRentalBook = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async (id: string) => await returnBook(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: [QUERY_KEYS.GET_RENTALS],
+            });
+        },
+    });
+};
+
+// ========================================
+//             REVENUES
+// ========================================
+export const useGetOwnerRevenue = (isOwner: boolean) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_OWNERS_MINE_REVENUES],
+        queryFn: async () => await getOwnerRevenue(),
+        placeholderData: keepPreviousData,
+        enabled: isOwner,
+    });
+};
+
+export const useGetAllOwnersRevenues = (isAdmin: boolean) => {
+    return useQuery({
+        queryKey: [QUERY_KEYS.GET_OWNERS_REVENUE],
+        queryFn: async () => await getAllOwnersRevenue(),
+        placeholderData: keepPreviousData,
+        enabled: isAdmin,
+    });
+};

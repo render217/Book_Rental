@@ -37,12 +37,11 @@ const getBooksInventory = async (req: Request, res: Response) => {
             availableCopies: inventory.availableCopies,
             rentedCopies: inventory.rentedCopies,
             pricePerDay: inventory.pricePerDay,
-            owner: mapOwnerToUser(inventory.owner, inventory.owner.account), // Map owner data
+            owner: mapOwnerToUser(inventory.owner, inventory.owner.account),
         };
         return inventoryData;
     });
 
-    // Return the mapped inventory data
     return res.status(200).json(mappedInventory);
 };
 

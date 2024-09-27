@@ -1,7 +1,7 @@
 import { PrismaClient, ApprovalStatus, Role } from "@prisma/client";
 import path from "node:path";
 import fs from "node:fs";
-
+import { hashSync, compareSync } from "bcrypt";
 const prisma = new PrismaClient();
 
 export const bookJSON = path.join(__dirname, "books.json");
@@ -61,14 +61,22 @@ async function seedAdmin() {
         const account = await prisma.account.create({
             data: {
                 username: "admin",
-                password: "admin@123",
+                password: hashSync("admin@123", 10),
                 email: "admin@gmail.com",
                 role: Role.ADMIN,
                 location: "Admin Location",
                 phoneNumber: "1234567890",
             },
         });
-        console.log("Admin account created:", account);
+        const adminProfile = await prisma.admin.create({
+            data: {
+                accountId: account.accountId,
+            },
+            include: {
+                account: true,
+            },
+        });
+        console.log("Admin account created:", adminProfile);
     } catch (error) {
         console.error("Error seeding admin:", error);
     } finally {

@@ -21,6 +21,9 @@ const getRentals = async (req: Request, res: Response) => {
                 },
             },
         },
+        orderBy: {
+            rentalStartDate: "desc",
+        },
     });
     const mappedRentals = rentals.map((rental) => {
         const bookRental = {

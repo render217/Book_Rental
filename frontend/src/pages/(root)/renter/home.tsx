@@ -1,47 +1,22 @@
-import { useAuth } from "@/context/auth-provider";
 import { useBooksCatalog } from "@/services/react-query/queries";
-import {
-    Box,
-    Button,
-    TextField,
-    Typography,
-    Grid2,
-    AppBar,
-    Toolbar,
-} from "@mui/material";
+import { Box, TextField, Grid2 } from "@mui/material";
 import BookCard from "./components/book-card";
 import BookSkeleton from "./components/book-card-skeleton";
-
-const bookRentalLogo = "/assets/svg/rental_logo.svg";
+import { useState } from "react";
 
 export default function Home() {
-    const { logOutUser } = useAuth();
-    const { data, isLoading } = useBooksCatalog();
+    const [search, setSearch] = useState("");
+    const { data, isLoading } = useBooksCatalog(search);
 
     const booksData = data || [];
 
     return (
         <Box>
-            <AppBar position="sticky" sx={{ backgroundColor: "#1976d2" }}>
-                <Toolbar>
-                    <img
-                        src={bookRentalLogo}
-                        alt="Book Rental Logo"
-                        style={{ height: "50px", marginRight: "16px" }}
-                    />
-                    <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                        Book Rental
-                    </Typography>
-                    <Button color="inherit">My Rentals</Button>
-                    <Button color="inherit" onClick={logOutUser}>
-                        Logout
-                    </Button>
-                </Toolbar>
-            </AppBar>
-
             {/* Search Input */}
             <Box sx={{ padding: "40px", textAlign: "center" }}>
                 <TextField
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     size="small"
                     variant="outlined"
                     placeholder="Search by name, category"

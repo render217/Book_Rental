@@ -1,6 +1,3 @@
-/*
-    get owner revenue (dashboard ui) owner.
-*/
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Revenue } from "@prisma/client";

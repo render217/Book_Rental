@@ -1,35 +1,30 @@
-import { useBookCatalogStatistics } from "@/services/react-query/queries";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import {
+    useBookCatalogStatistics,
+    useGetBooksInventoryStatistics,
+} from "@/services/react-query/queries";
 import { Box, Stack, Typography } from "@mui/material";
-import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import AvaliableBooksView from "./components/avaliable-books/avaliable-books-view";
+import { useAuth } from "@/context/auth-provider";
+import { Role_Enum } from "@/types";
 
-const COLORS = [
-    "#0088FE",
-    "#00C49F",
-    "#FFBB28",
-    "#FF8042",
-    "#A28FDB",
-    "#FF6347",
-    "#4682B4",
-    "#32CD32",
-    "#FFD700",
-    "#FF4500",
-];
-const generateCategoryData = (
-    categories: { category: string; count: number }[]
-) => {
-    return categories.map((item, index) => ({
-        name: item.category,
-        value: item.count,
-        color: COLORS[index % COLORS.length],
-    }));
-};
 export default function AvaliableBooks() {
-    const { data, isLoading } = useBookCatalogStatistics();
+    const { user } = useAuth();
 
-    if (isLoading) {
+    const isAdmin = user.role === Role_Enum.ADMIN;
+    const isOwner = user.role === Role_Enum.OWNER;
+
+    const { data: bookCatalogData, isLoading: isCatalogLoading } =
+        useBookCatalogStatistics(isAdmin);
+
+    const { data: booksInventoryData, isLoading: isInventoryLoading } =
+        useGetBooksInventoryStatistics(isOwner);
+
+    if (isCatalogLoading || isInventoryLoading) {
         return null;
     }
-    const formatedData = generateCategoryData(data!);
+    const isLoading = isOwner ? isInventoryLoading : isCatalogLoading;
+    const data = isOwner ? booksInventoryData : bookCatalogData;
 
     return (
         <Box
@@ -64,77 +59,8 @@ export default function AvaliableBooks() {
                     </Typography>
                 </Box>
             </Stack>
-
-            <ResponsiveContainer width="100%" height={180}>
-                <PieChart>
-                    {data && (
-                        <Pie
-                            data={formatedData}
-                            cx={"50%"}
-                            cy={"50%"}
-                            innerRadius={60}
-                            outerRadius={80}
-                            fill="#8884d8"
-                            paddingAngle={0}
-                            dataKey="value">
-                            {!isLoading &&
-                                data &&
-                                formatedData.map((entry, index) => (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={entry.color}
-                                    />
-                                ))}
-                        </Pie>
-                    )}
-                </PieChart>
-            </ResponsiveContainer>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "5px",
-                }}>
-                {data &&
-                    formatedData.map((item, index) => {
-                        return (
-                            <Stack
-                                key={index}
-                                direction="row"
-                                spacing={2}
-                                justifyContent="space-between"
-                                alignItems="center">
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "2px",
-                                    }}>
-                                    <CircleDot color={item.color} />
-                                    <Typography>{item.name}</Typography>
-                                </Box>
-                                <Typography>{item.value}</Typography>
-                            </Stack>
-                        );
-                    })}
-            </Box>
+            {/* @ts-ignore */}
+            <AvaliableBooksView data={data} isLoading={isLoading} />
         </Box>
-    );
-}
-
-function CircleDot({ color }: { color: string }) {
-    return (
-        <>
-            <Box
-                sx={{
-                    width: 16,
-                    height: 16,
-                    borderRadius: "50%",
-                    backgroundColor: color,
-                    display: "inline-block",
-                    marginRight: "8px",
-                }}
-            />
-        </>
     );
 }

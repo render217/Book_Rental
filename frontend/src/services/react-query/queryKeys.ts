@@ -11,7 +11,7 @@ export enum QUERY_KEYS {
     // BOOK INVENTORY KEYS
     GET_BOOKS_INVENTORY = "getBooksInventory",
     GET_BOOK_INVENTORY_STATISTICS = "getBookInventoryStatistics",
-
+    SEARCH_BOOK_IN_INVENTORY = "searchBookInInventory",
     // BOOK RENTAL KEYS
     GET_RENTALS = "getRentals",
     // OWNER REVENUE KEYS

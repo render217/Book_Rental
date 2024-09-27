@@ -1,7 +1,9 @@
 import { Box, Grid2, Typography } from "@mui/material";
 import Revenue from "./revenue";
 import AvaliableBooks from "./avaliable-books";
+import { getCurrentDate } from "@/utils";
 export default function Statistics() {
+    const currentDate = getCurrentDate();
     return (
         <Box
             sx={{
@@ -29,7 +31,7 @@ export default function Statistics() {
                         fontWeight: "300",
                         color: "#656575",
                     }}>
-                    Tue, 14 Nov, 2024, 11.30 AM
+                    {currentDate}
                 </Typography>
             </Box>
 

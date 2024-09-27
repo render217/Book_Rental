@@ -15,6 +15,6 @@ router.use("/users", usersRouter);
 router.use("/books", booksRouter);
 router.use("/inventory", inventoryRouter);
 router.use("/rentals", rentalsRouter);
-router.use("/renvenues", revenuesRouter);
+router.use("/revenues", revenuesRouter);
 
 export default router;
