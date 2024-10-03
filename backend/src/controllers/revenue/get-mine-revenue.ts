@@ -1,20 +1,25 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Revenue } from "@prisma/client";
+import { accessibleBy } from "@casl/prisma";
 const getMineRevenue = async (req: Request, res: Response) => {
     const user = req.user!;
 
-    if (user.role !== Role.OWNER) {
-        return res.status(403).json({
-            message: "Access denied.",
-        });
-    }
+    // if (user.role !== Role.OWNER) {
+    //     return res.status(403).json({
+    //         message: "Access denied.",
+    //     });
+    // }
 
     const revenues = await prisma.revenue.findMany({
         where: {
-            ownerId: user.id,
-            month: new Date().getMonth() + 1,
-            year: new Date().getFullYear(),
+            AND: [
+                accessibleBy(req.ability).Revenue,
+                {
+                    month: new Date().getMonth() + 1,
+                    year: new Date().getFullYear(),
+                },
+            ],
         },
     });
 

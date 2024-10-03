@@ -2,20 +2,26 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Revenue } from "@prisma/client";
 import { mapOwnerToUser } from "../../utils/mapper";
+import { accessibleBy } from "@casl/prisma";
 const getOwnersRevenue = async (req: Request, res: Response) => {
     const user = req.user!;
 
-    if (user.role !== Role.ADMIN) {
-        return res.status(403).json({
-            message: "Access denied. Only admins can view owner revenue.",
-        });
-    }
+    // if (user.role !== Role.ADMIN) {
+    //     return res.status(403).json({
+    //         message: "Access denied. Only admins can view owner revenue.",
+    //     });
+    // }
 
-    // Fetch all owner revenues of current month
+    // Fetch owner revenues of current month (by ability)
     const revenues = await prisma.revenue.findMany({
         where: {
-            month: new Date().getMonth() + 1,
-            year: new Date().getFullYear(),
+            AND: [
+                accessibleBy(req.ability).Revenue,
+                {
+                    month: new Date().getMonth() + 1,
+                    year: new Date().getFullYear(),
+                },
+            ],
         },
     });
 

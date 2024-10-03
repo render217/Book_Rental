@@ -1,47 +1,54 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { mapOwnerToUser } from "../../utils/mapper";
-import { Role, ApprovalStatus } from "@prisma/client";
+import { Role, ApprovalStatus, Prisma } from "@prisma/client";
+import { accessibleBy } from "@casl/prisma";
 const getBooks = async (req: Request, res: Response) => {
     const user = req.user!;
     const { q } = req.query;
 
     // Create search filters based on 'q'
-    const filters: any = {
-        AND: [],
+    const filters:
+        | Prisma.BookCatalogWhereInput
+        | Prisma.BookCatalogWhereInput[] = {
+        AND: [accessibleBy(req.ability).BookCatalog],
     };
 
     if (q) {
-        filters.AND.push({
-            OR: [
-                {
-                    title: {
-                        contains: q as string,
-                        mode: "insensitive",
-                    },
+        filters.OR = [
+            {
+                title: {
+                    contains: q as string,
+                    mode: "insensitive",
                 },
-                {
-                    author: {
-                        contains: q as string,
-                        mode: "insensitive",
-                    },
+            },
+            {
+                author: {
+                    contains: q as string,
+                    mode: "insensitive",
                 },
-                {
-                    category: {
-                        contains: q as string,
-                        mode: "insensitive",
-                    },
+            },
+            {
+                category: {
+                    contains: q as string,
+                    mode: "insensitive",
                 },
-            ],
-        });
+            },
+        ];
     }
 
-    if (user.role === Role.RENTER || user.role === Role.OWNER) {
-        // For renters or owners, only return books that are approved
-        filters.AND.push({
-            status: ApprovalStatus.APPROVED,
-        });
-    }
+    // ABILITY USED INSTEAD..
+
+    // if (user.role === Role.RENTER || user.role === Role.OWNER) {
+    //     // For renters or owners, only return books that are approved
+    //     if (Array.isArray(filters.AND)) {
+    //         filters.AND.push({
+    //             status: ApprovalStatus.APPROVED,
+    //         });
+    //     } else {
+    //         filters.AND = [{ status: ApprovalStatus.APPROVED }];
+    //     }
+    // }
 
     const books = await prisma.bookCatalog.findMany({
         where: filters,

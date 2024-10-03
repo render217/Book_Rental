@@ -2,19 +2,21 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Prisma } from "@prisma/client";
 import { mapOwnerToUser } from "../../utils/mapper";
+import { accessibleBy } from "@casl/prisma";
 const getBooksInventory = async (req: Request, res: Response) => {
     const user = req.user!;
 
-    const whereFilter: Prisma.BookInventoryWhereInput = {};
+    // const whereFilter: Prisma.BookInventoryWhereInput = {};
 
     // If the user is an owner, only fetch their own inventory
-    if (user.role === Role.OWNER) {
-        whereFilter.ownerId = user.id;
-    }
+    // if (user.role === Role.OWNER) {
+    //     whereFilter.ownerId = user.id;
+    // }
 
     // Fetch the books inventory based on the user's role
     const booksInventory = await prisma.bookInventory.findMany({
-        where: whereFilter,
+        // where: whereFilter,
+        where: accessibleBy(req.ability, "read").BookInventory,
         include: {
             book: true,
             owner: {

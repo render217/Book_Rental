@@ -1,17 +1,19 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus, Prisma } from "@prisma/client";
+import { accessibleBy } from "@casl/prisma";
 const getBookInventoryStatistics = async (req: Request, res: Response) => {
     const user = req.user!;
 
-    const where: Prisma.BookInventoryWhereInput = {};
+    // const where: Prisma.BookInventoryWhereInput = {};
 
-    if (user.role === Role.OWNER) {
-        where.ownerId = user.id;
-    }
+    // if (user.role === Role.OWNER) {
+    //     where.ownerId = user.id;
+    // }
 
     const booksInventory = await prisma.bookInventory.findMany({
-        where: where,
+        // where: where,
+        where: accessibleBy(req.ability, "read").BookInventory,
         include: {
             book: true,
             owner: {

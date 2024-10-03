@@ -33,7 +33,6 @@ export default function BookInventoryForm() {
     } = form;
 
     const handleOnSelect = (id: string) => {
-        console.log("Selected:", id);
         setValue("id", id);
     };
 
@@ -49,9 +48,9 @@ export default function BookInventoryForm() {
 
         try {
             const res = await addBookInventoryMutation(payload);
-            toast.success(res?.message || "book added successfully");
-            reset();
             setValue("id", "");
+            reset();
+            toast.success(res?.message || "book added successfully");
         } catch (error) {
             handleError(error);
         }

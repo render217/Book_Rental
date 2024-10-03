@@ -6,8 +6,9 @@ import {
     mapAdminToUser,
     mapOwnerToUser,
     mapRenterToUser,
+    mapUser,
 } from "../utils/mapper";
-import { IUser } from "../utils/types";
+import { IUser, User } from "../utils/types";
 import { AppAbility, defineAbilitiesFor } from "../config/abilities";
 
 declare global {
@@ -15,7 +16,7 @@ declare global {
         interface Request {
             userId: string | undefined;
             role: Role | undefined;
-            user: IUser | undefined;
+            user: User | undefined;
             ability: AppAbility;
         }
     }
@@ -23,7 +24,7 @@ declare global {
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
     const token = req.headers.authorization;
-    console.log("CheckAuth:Middleware: Token", token ? true : false);
+    // console.log("CheckAuth:Middleware: Token", token ? true : false);
     if (!token) {
         return res.status(401).json({ message: "Unauthorized" });
     }
@@ -33,14 +34,14 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const decoded = jwt.verify(tokenVal, process.env.JWT_SECRET!);
-        console.log("CheckAuth:Middleware: DecodedToken", decoded);
+        // console.log("CheckAuth:Middleware: DecodedToken", decoded);
 
         const reqUserId = (decoded as { id: string; role: Role }).id;
         const reqRole = (decoded as { id: string; role: Role }).role;
 
         req.userId = reqUserId;
         req.role = reqRole;
-        let user;
+        let user: User;
         switch (reqRole) {
             case Role.OWNER:
                 const owner = await prisma.owner.findUnique({
@@ -56,7 +57,8 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
                         message: "Unauthorized.(no owner found)",
                     });
                 }
-                user = mapOwnerToUser(owner, owner.account);
+                // user = mapOwnerToUser(owner, owner.account);
+                user = mapUser(owner.account, owner) as User;
                 break;
             case Role.RENTER:
                 const renter = await prisma.renter.findUnique({
@@ -73,7 +75,8 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
                         message: "Unauthorized.(no renter found)",
                     });
                 }
-                user = mapRenterToUser(renter, renter.account);
+                // user = mapRenterToUser(renter, renter.account);
+                user = mapUser(renter.account, null, null, renter) as User;
                 break;
             case Role.ADMIN:
                 const admin = await prisma.admin.findUnique({
@@ -90,7 +93,8 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
                         message: "Unauthorized.(no admin found)",
                     });
                 }
-                user = mapAdminToUser(admin, admin.account);
+                // user = mapAdminToUser(admin, admin.account);
+                user = mapUser(admin.account, null, admin) as User;
                 break;
             default:
                 return res
@@ -98,7 +102,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
                     .json({ message: "Unauthorized.(Invalid Role)" });
         }
         req.user = user;
-        req.ability = defineAbilitiesFor(reqRole);
+        req.ability = defineAbilitiesFor(req.user);
         next();
     } catch (error: Error | any) {
         console.log("CheckAuth:Middleware: Error", error.message);

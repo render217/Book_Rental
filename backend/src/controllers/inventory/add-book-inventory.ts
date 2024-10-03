@@ -1,55 +1,56 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus } from "@prisma/client";
+import { ForbiddenError, subject } from "@casl/ability";
+import ApiError from "../../utils/api-error";
 const addBookInventory = async (req: Request, res: Response) => {
     const owner = req.user!;
     const { bookId, totalCopies, pricePerDay } = req.body;
 
-    if (!bookId || !totalCopies || !pricePerDay) {
-        return res
-            .status(400)
-            .json({ error: "Please provide all required fields." });
-    }
+    // if (owner.role !== Role.OWNER) {
+    //     return res
+    //         .status(403)
+    //         .json({ message: "You are not authorized to add book." });
+    // }
 
-    if (owner.role !== Role.OWNER) {
-        return res
-            .status(403)
-            .json({ message: "You are not authorized to add book." });
-    }
+    // if (owner.status === OwnerStatus.DISABLED) {
+    //     return res.status(400).json({ message: "Your account disabled." });
+    // }
 
-    if (owner.status === OwnerStatus.DISABLED) {
-        return res.status(400).json({ message: "Your account disabled." });
-    }
+    ForbiddenError.from(req.ability).throwUnlessCan(
+        "create-inventory",
+        subject("User", owner)
+    );
 
     const targetBook = await prisma.bookCatalog.findFirst({
         where: {
-            bookId: bookId,
+            bookId: bookId || "",
             status: ApprovalStatus.APPROVED,
         },
     });
-    console.log(targetBook);
+
     if (!targetBook) {
-        return res.status(404).json({ message: "Book is not available." });
+        throw new ApiError(404, "Book is not available.");
     }
 
     // check if book already exists in inventory
 
     const existingBook = await prisma.bookInventory.findFirst({
         where: {
-            bookId: bookId,
-            ownerId: owner.id,
+            AND: [{ bookId: targetBook.bookId }, { ownerId: owner.id }],
         },
     });
-
-    if (existingBook) {
-        return res.status(400).json({
-            message: "Book already exists in your inventory.",
-        });
+    console.log({ existingBook, owner });
+    if (existingBook !== null) {
+        // throw new ApiError(400, "Book already exists in your inventory.");
+        return res
+            .status(400)
+            .json({ message: "Book already exists in your inventory." });
     }
 
     const newBookInventory = await prisma.bookInventory.create({
         data: {
-            bookId: bookId,
+            bookId: targetBook.bookId,
             ownerId: owner.id,
             totalCopies: totalCopies,
             availableCopies: totalCopies,

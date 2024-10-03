@@ -6,6 +6,7 @@ import {
     mapRenterToUser,
     mapToPublicUser,
 } from "../../utils/mapper";
+import { accessibleBy } from "@casl/prisma";
 const searchBookInInventory = async (req: Request, res: Response) => {
     const bookId = req.params.id;
 
@@ -26,14 +27,15 @@ const searchBookInInventory = async (req: Request, res: Response) => {
     const bookInventory = await prisma.bookInventory.findMany({
         where: {
             AND: [
+                accessibleBy(req.ability).BookInventory,
                 {
                     bookId: bookId,
                 },
-                {
-                    owner: {
-                        status: OwnerStatus.ACTIVE,
-                    },
-                },
+                // {
+                //     owner: {
+                //         status: OwnerStatus.ACTIVE,
+                //     },
+                // },
             ],
         },
         include: {

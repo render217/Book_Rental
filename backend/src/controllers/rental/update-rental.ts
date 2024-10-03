@@ -7,6 +7,7 @@ import {
     RentalStatus,
 } from "@prisma/client";
 import { mapToPublicUser } from "../../utils/mapper";
+import { accessibleBy } from "@casl/prisma";
 const updateRentals = async (req: Request, res: Response) => {
     const user = req.user!;
     const rentalId = req.params.id;
@@ -20,12 +21,13 @@ const updateRentals = async (req: Request, res: Response) => {
     const rental = await prisma.bookRental.findFirst({
         where: {
             AND: [
+                accessibleBy(req.ability).BookRental,
                 {
                     rentalId: rentalId,
                 },
-                {
-                    renterId: user.id,
-                },
+                // {
+                //     renterId: user.id,
+                // },
             ],
         },
     });

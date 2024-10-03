@@ -1,20 +1,28 @@
 import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { ApprovalStatus, Role } from "@prisma/client";
+import { ForbiddenError, subject } from "@casl/ability";
+import ApiError from "../../utils/api-error";
+
 // import { PrismaClient } from "@prisma/client";
 const updateBookStatus = async (req: Request, res: Response) => {
     const user = req.user!;
     const bookId = req.params.id;
 
     if (!bookId) {
-        return res.status(400).json({ error: "bookId is required." });
+        throw new ApiError(400, "Book id is required.");
     }
     // Check if user is an admin
-    if (user.role !== Role.ADMIN) {
-        return res
-            .status(403)
-            .json({ error: "Access Denied. You are not authorized." });
-    }
+    // if (user.role !== Role.ADMIN) {
+    //     return res
+    //         .status(403)
+    //         .json({ error: "Access Denied. You are not authorized." });
+    // }
+
+    // Check if user is authorized to update book status
+    ForbiddenError.from(req.ability)
+        .setMessage("Access Denied.")
+        .throwUnlessCan("update-book-catalog-status", subject("User", user));
 
     const targetBook = await prisma.bookCatalog.findUnique({
         where: {
@@ -23,7 +31,7 @@ const updateBookStatus = async (req: Request, res: Response) => {
     });
 
     if (!targetBook) {
-        return res.status(404).json({ message: "Book not found." });
+        throw new ApiError(404, "Book not found.");
     }
 
     // Update the book status

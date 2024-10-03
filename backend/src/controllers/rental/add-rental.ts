@@ -6,9 +6,12 @@ import {
     ApprovalStatus,
     RentalStatus,
 } from "@prisma/client";
+import { ForbiddenError } from "@casl/ability";
 const addRental = async (req: Request, res: Response) => {
     const user = req.user!;
     const { bookInventoryId, noOfDays, quantity } = req.body;
+
+    ForbiddenError.from(req.ability).throwUnlessCan("create", "BookRental");
 
     // simple validation.
     if (!noOfDays || !quantity) {

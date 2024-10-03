@@ -6,7 +6,7 @@ import {
     BookInventory,
     BookCatalog,
 } from "@prisma/client";
-import { IUser } from "./types";
+import { IUser, User } from "./types";
 export const mapRenterToUser = (renter: Renter, account: Account): IUser => {
     return {
         id: renter.renterId,
@@ -66,4 +66,49 @@ export const mapBookInventory = (
         pricePerDay: inventory.pricePerDay,
         owner: mapOwnerToUser(owner, account),
     };
+};
+
+export const mapUser = (
+    account: Account,
+    owner?: Owner | null,
+    admin?: Admin | null,
+    renter?: Renter | null
+) => {
+    if (owner) {
+        return new User(
+            // account.accountId,
+            owner.ownerId,
+            account.username,
+            account.email,
+            account.phoneNumber,
+            account.location,
+            account.role,
+            null,
+            owner.isApproved,
+            owner.status
+        );
+    }
+    if (admin) {
+        return new User(
+            admin.adminId,
+            // account.accountId,
+            account.username,
+            account.email,
+            account.phoneNumber,
+            account.location,
+            account.role
+        );
+    }
+    if (renter) {
+        return new User(
+            renter.renterId,
+            // account.accountId,
+            account.username,
+            account.email,
+            account.phoneNumber,
+            account.location,
+            account.role,
+            renter.address
+        );
+    }
 };

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import * as inventoryController from "../controllers/inventory";
 import checkAuth from "../middleware/check-auth";
+import { validateData } from "../middleware/validate-data";
+import addBookInventorySchema from "../validation/book-inventory.schema";
 const inventoryRouter = Router();
 
 inventoryRouter.get("/", checkAuth, inventoryController.getBooksInventory);
@@ -16,7 +18,12 @@ inventoryRouter.get(
 );
 inventoryRouter.get("/:id", checkAuth, inventoryController.getBookInventory);
 
-inventoryRouter.post("/", checkAuth, inventoryController.addBookInventory);
+inventoryRouter.post(
+    "/",
+    checkAuth,
+    validateData(addBookInventorySchema),
+    inventoryController.addBookInventory
+);
 inventoryRouter.patch(
     "/:id",
     checkAuth,

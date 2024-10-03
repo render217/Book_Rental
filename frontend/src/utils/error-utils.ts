@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { AxiosError, isAxiosError } from "axios";
 import { toast } from "react-toastify";
 
@@ -39,6 +38,24 @@ export const handle422Error = (
     return null;
 };
 
+const handle403Error = (
+    error: AxiosError,
+    callback: (message: string) => void
+) => {
+    if (
+        error.response &&
+        (error.response.status === 403 || error.response.data)
+    ) {
+        const errorsData = error.response.data as {
+            message: string;
+        };
+        callback(errorsData.message);
+        return errorsData.message;
+    }
+
+    return "Forbidden: You do not have permission to perform this action.";
+};
+
 export const handleError = (error: unknown) => {
     if (isAxiosError(error)) {
         // Axios-specific error handling
@@ -55,13 +72,13 @@ export const handleError = (error: unknown) => {
                     });
                     break;
                 case 422:
-                    handle422Error(error, (_errors) => {
+                    handle422Error(error, (errors) => {
                         // errorLogger(422, { errors });
-                        // for (const error of errors) {
-                        //     for (const key in error) {
-                        //         toast.error(`${key}: ${error[key]}`);
-                        //     }
-                        // }
+                        for (const error of errors) {
+                            for (const key in error) {
+                                toast.error(`${error[key]}`);
+                            }
+                        }
                     });
                     break;
                 case 401:
@@ -71,9 +88,9 @@ export const handleError = (error: unknown) => {
                     break;
                 case 403:
                     // errorLogger(403, null);
-                    toast.error(
-                        "Forbidden: You do not have permission to perform this action."
-                    );
+                    handle403Error(error, (message) => {
+                        toast.error(message || "Forbidden:Permission denied");
+                    });
 
                     break;
                 case 404:

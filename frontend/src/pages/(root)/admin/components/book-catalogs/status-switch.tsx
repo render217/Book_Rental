@@ -4,6 +4,7 @@ import { Box, Switch, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import { toast } from "react-toastify";
+import { handleError } from "@/utils/error-utils";
 export default function StatusSwitch({
     bookId,
     status,
@@ -16,10 +17,9 @@ export default function StatusSwitch({
     const handleToggle = async () => {
         try {
             const res = await updateStatus(bookId);
-            console.log(res);
             toast.success(res?.message || "Status Updated");
         } catch (error) {
-            console.log(error);
+            handleError(error);
         }
     };
 

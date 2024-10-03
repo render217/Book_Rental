@@ -2,13 +2,15 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus } from "@prisma/client";
 import { mapToPublicUser } from "../../utils/mapper";
+import { accessibleBy } from "@casl/prisma";
 const getRentals = async (req: Request, res: Response) => {
     const user = req.user!;
 
     const rentals = await prisma.bookRental.findMany({
-        where: {
-            renterId: user.id,
-        },
+        // where: {
+        //     renterId: user.id,
+        // },
+        where: accessibleBy(req.ability).BookRental,
         include: {
             bookInventory: {
                 include: {

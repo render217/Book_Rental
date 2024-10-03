@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction } from "express";
 import ApiError from "../utils/api-error";
-import { PrismaClientUnknownRequestError } from "@prisma/client/runtime/library";
+import {
+    PrismaClientKnownRequestError,
+    PrismaClientUnknownRequestError,
+} from "@prisma/client/runtime/library";
 import { ForbiddenError } from "@casl/ability";
 const errorHandler = (
     err: Error | ApiError,
@@ -9,15 +12,19 @@ const errorHandler = (
     next: NextFunction
 ) => {
     let error = err;
+
     if (error instanceof ForbiddenError) {
         return res.status(403).json({
-            message: "Forbidden",
+            message: error.message || "Forbidden",
         });
     }
 
     if (!(error instanceof ApiError)) {
         const statusCode =
-            error instanceof PrismaClientUnknownRequestError ? 400 : 500;
+            error instanceof PrismaClientUnknownRequestError ||
+            error instanceof PrismaClientKnownRequestError
+                ? 400
+                : 500;
         const message = error.message || "Something went wrong";
         error = new ApiError(statusCode, message, [], err.stack);
     }

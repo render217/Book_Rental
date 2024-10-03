@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus } from "@prisma/client";
 import { mapBookInventory } from "../../utils/mapper";
+import ApiError from "../../utils/api-error";
+import { ForbiddenError, subject } from "@casl/ability";
 
 const removeBookInventory = async (req: Request, res: Response) => {
     const user = req.user!;
@@ -9,9 +11,7 @@ const removeBookInventory = async (req: Request, res: Response) => {
     const bookInventoryId = req.params.id;
 
     if (!bookInventoryId) {
-        return res
-            .status(400)
-            .json({ message: "Book Inventory ID is required." });
+        throw new ApiError(400, "Book Inventory ID is required.");
     }
 
     const bookInventory = await prisma.bookInventory.findUnique({
@@ -31,9 +31,13 @@ const removeBookInventory = async (req: Request, res: Response) => {
     }
 
     // Check ownership and permission
-    if (user.role !== Role.OWNER && bookInventory.ownerId !== user.id) {
-        return res.status(403).json({ message: "Unauthorized." });
-    }
+    // if (user.role !== Role.OWNER && bookInventory.ownerId !== user.id) {
+    //     return res.status(403).json({ message: "Unauthorized." });
+    // }
+
+    ForbiddenError.from(req.ability)
+        .setMessage("Access Denined.")
+        .throwUnlessCan("delete", subject("BookInventory", bookInventory));
 
     // Validate: If 'allCopies' is true, skip validation for 'noOfCopiesToRemove'
     if (allCopies) {

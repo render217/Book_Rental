@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../prisma/db";
 import { Role, OwnerStatus, ApprovalStatus } from "@prisma/client";
 import { mapOwnerToUser } from "../../utils/mapper";
+import { ForbiddenError, subject } from "@casl/ability";
 const updateBookInventory = async (req: Request, res: Response) => {
     const user = req.user!;
 
@@ -23,9 +24,13 @@ const updateBookInventory = async (req: Request, res: Response) => {
         return res.status(404).json({ message: "Book inventory not found." });
     }
 
-    if (user.role !== Role.OWNER && bookInventory.ownerId !== user.id) {
-        return res.status(403).json({ message: "Unauthorized." });
-    }
+    // if (user.role !== Role.OWNER && bookInventory.ownerId !== user.id) {
+    //     return res.status(403).json({ message: "Unauthorized." });
+    // }
+
+    ForbiddenError.from(req.ability)
+        .setMessage("Access Denied")
+        .throwUnlessCan("update", subject("BookInventory", bookInventory));
 
     const { pricePerDay, noOfCopies } = req.body;
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
     useBookCatalogStatistics,
@@ -9,23 +10,30 @@ import { useAuth } from "@/context/auth-provider";
 import { Role_Enum } from "@/types";
 
 export default function AvaliableBooks() {
-    const { user } = useAuth();
+    // const { user } = useAuth();
 
-    const isAdmin = user.role === Role_Enum.ADMIN;
-    const isOwner = user.role === Role_Enum.OWNER;
+    // const isAdmin = user.role === Role_Enum.ADMIN;
+    // const isOwner = user.role === Role_Enum.OWNER;
 
-    const { data: bookCatalogData, isLoading: isCatalogLoading } =
-        useBookCatalogStatistics(isAdmin);
+    // const { data: bookCatalogData, isLoading: isCatalogLoading } =
+    //     useBookCatalogStatistics(isAdmin);
 
-    const { data: booksInventoryData, isLoading: isInventoryLoading } =
-        useGetBooksInventoryStatistics(isOwner);
+    // const { data: booksInventoryData, isLoading: isInventoryLoading } =
+    //     useGetBooksInventoryStatistics(isOwner);
 
-    if (isCatalogLoading || isInventoryLoading) {
+    // if (isCatalogLoading || isInventoryLoading) {
+    //     return null;
+    // }
+    // const isLoading = isOwner ? isInventoryLoading : isCatalogLoading;
+    // const data = isOwner ? booksInventoryData : bookCatalogData;
+
+    const { data: booksInventoryData, isLoading } =
+        useGetBooksInventoryStatistics(true);
+    const data = booksInventoryData;
+
+    if (isLoading) {
         return null;
     }
-    const isLoading = isOwner ? isInventoryLoading : isCatalogLoading;
-    const data = isOwner ? booksInventoryData : bookCatalogData;
-
     return (
         <Box
             sx={{

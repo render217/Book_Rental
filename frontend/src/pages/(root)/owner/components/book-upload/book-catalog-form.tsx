@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useCreateBookCatalog } from "@/services/react-query/queries";
 import { useState } from "react";
+import { handleError } from "@/utils/error-utils";
 
 const CATEGORIES = [
     "Self-help",
@@ -27,7 +28,7 @@ const CATEGORIES = [
 ] as const;
 
 const bookSchema = z.object({
-    title: z.string().min(2, "Book title must be at least 2 characters long"),
+    title: z.string().min(1, "Book title must be at least 2 characters long"),
     author: z.string().min(5, "Book Author must be at least 5 characters long"),
     category: z.enum(CATEGORIES, {
         errorMap: () => ({ message: "Please select a valid category" }),
@@ -66,7 +67,7 @@ export default function BookCatalogForm({
             onClose(); // closes the form dialog
             setOpenSuccessDialog(true);
         } catch (error) {
-            console.log(error);
+            handleError(error);
         }
     };
 

@@ -3,17 +3,19 @@ import { prisma } from "../../prisma/db";
 import { mapOwnerToUser } from "../../utils/mapper";
 
 import { Role } from "@prisma/client";
+import { accessibleBy } from "@casl/prisma";
+import ApiError from "../../utils/api-error";
 const getBookDetail = async (req: Request, res: Response) => {
     const user = req.user!;
     const bookId = req.params.id;
 
     if (!bookId) {
-        return res.status(400).json({ message: "Book id is required." });
+        throw new ApiError(400, "Book id is required.");
     }
 
-    const book = await prisma.bookCatalog.findUnique({
+    const book = await prisma.bookCatalog.findFirst({
         where: {
-            bookId: bookId,
+            AND: [accessibleBy(req.ability).BookCatalog, { bookId: bookId }],
         },
         include: {
             uploader: {
@@ -25,7 +27,7 @@ const getBookDetail = async (req: Request, res: Response) => {
     });
 
     if (!book) {
-        return res.status(404).json({ message: "Book not found." });
+        throw new ApiError(404, "Book not found.");
     }
 
     // Prepare the response data
