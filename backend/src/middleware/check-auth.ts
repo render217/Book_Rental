@@ -8,6 +8,7 @@ import {
     mapRenterToUser,
 } from "../utils/mapper";
 import { IUser } from "../utils/types";
+import { AppAbility, defineAbilitiesFor } from "../config/abilities";
 
 declare global {
     namespace Express {
@@ -15,6 +16,7 @@ declare global {
             userId: string | undefined;
             role: Role | undefined;
             user: IUser | undefined;
+            ability: AppAbility;
         }
     }
 }
@@ -96,6 +98,7 @@ const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
                     .json({ message: "Unauthorized.(Invalid Role)" });
         }
         req.user = user;
+        req.ability = defineAbilitiesFor(reqRole);
         next();
     } catch (error: Error | any) {
         console.log("CheckAuth:Middleware: Error", error.message);
