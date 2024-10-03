@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
-    useBookCatalogStatistics,
+    // useBookCatalogStatistics,
     useGetBooksInventoryStatistics,
 } from "@/services/react-query/queries";
 import { Box, Stack, Typography } from "@mui/material";
 import AvaliableBooksView from "./components/avaliable-books/avaliable-books-view";
-import { useAuth } from "@/context/auth-provider";
-import { Role_Enum } from "@/types";
+// import { useAuth } from "@/context/auth-provider";
+// import { Role_Enum } from "@/types";
 
 export default function AvaliableBooks() {
     // const { user } = useAuth();
