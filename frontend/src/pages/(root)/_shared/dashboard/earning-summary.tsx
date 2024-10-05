@@ -1,3 +1,4 @@
+import apiClient from "@/services/apiClient";
 import { Box } from "@mui/material";
 
 import {
@@ -9,17 +10,35 @@ import {
     Tooltip,
     ResponsiveContainer,
 } from "recharts";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/services/react-query/queryKeys";
 
-const data = [
-    { name: "May", thisYear: 250000, lastYear: 120000 },
-    { name: "Jun", thisYear: 200000, lastYear: 180000 },
-    { name: "Jul", thisYear: 230000, lastYear: 150000 },
-    { name: "Aug", thisYear: 210000, lastYear: 170000 },
-    { name: "Sep", thisYear: 240000, lastYear: 160000 },
-    { name: "Oct", thisYear: 270000, lastYear: 180000 },
-];
+type RevenueSummaryApiResponse = {
+    data: [
+        {
+            name: string;
+            thisYear: number;
+            lastYear: number;
+        }[]
+    ];
+};
 
 const EarningSummary = () => {
+    const { data: { data = [] } = {}, isLoading } = useQuery({
+        queryKey: [QUERY_KEYS.GET_REVENUE_SUMMARY],
+        queryFn: async () => {
+            const res = await apiClient.get<RevenueSummaryApiResponse>(
+                "/revenues/summary"
+            );
+            return res.data as RevenueSummaryApiResponse;
+        },
+        placeholderData: keepPreviousData,
+    });
+
+    if (isLoading) {
+        return <EarningSummarySkeleton />;
+    }
+
     return (
         <Box sx={{ backgroundColor: "white", padding: "10px" }}>
             <ResponsiveContainer width="100%" height={210}>
@@ -50,3 +69,47 @@ const EarningSummary = () => {
 };
 
 export default EarningSummary;
+
+function EarningSummarySkeleton() {
+    const data = [
+        { name: "Jan", thisYear: 0, lastYear: 0 },
+        { name: "Feb", thisYear: 0, lastYear: 0 },
+        { name: "Mar", thisYear: 0, lastYear: 0 },
+        { name: "Apr", thisYear: 0, lastYear: 0 },
+        { name: "May", thisYear: 0, lastYear: 0 },
+        { name: "Jun", thisYear: 0, lastYear: 0 },
+        { name: "Jul", thisYear: 0, lastYear: 0 },
+        { name: "Aug", thisYear: 0, lastYear: 0 },
+        { name: "Sep", thisYear: 0, lastYear: 0 },
+        { name: "Oct", thisYear: 0, lastYear: 0 },
+        { name: "Nov", thisYear: 0, lastYear: 0 },
+        { name: "Dec", thisYear: 0, lastYear: 0 },
+    ];
+    return (
+        <Box sx={{ backgroundColor: "white", padding: "10px" }}>
+            <ResponsiveContainer width="100%" height={210}>
+                <AreaChart
+                    data={data}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area
+                        type="monotone"
+                        dataKey="thisYear"
+                        stroke="#0088FE"
+                        fill="#99CFFF"
+                    />
+                    <Area
+                        type="monotone"
+                        dataKey="lastYear"
+                        stroke="#33A0FF"
+                        fill="#33A0FF"
+                        strokeDasharray="5 5"
+                    />
+                </AreaChart>
+            </ResponsiveContainer>
+        </Box>
+    );
+}
