@@ -172,7 +172,7 @@ const getBooksInventory = async (req: Request, res: Response) => {
         },
     };
 
-    return res.status(200).json(mappedInventory);
+    return res.status(200).json(payload);
 };
 
 export default getBooksInventory;
