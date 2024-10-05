@@ -1,5 +1,5 @@
 import apiClient from "@/services/apiClient";
-import { Box } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 import {
     AreaChart,
@@ -40,8 +40,21 @@ const EarningSummary = () => {
     }
 
     return (
-        <Box sx={{ backgroundColor: "white", padding: "10px" }}>
-            <ResponsiveContainer width="100%" height={210}>
+        <Box
+            sx={{
+                backgroundColor: "white",
+                paddingInline: "10px",
+                paddingBlock: "10px",
+            }}>
+            <Typography
+                sx={{
+                    textAlign: "center",
+                    color: "text.secondary",
+                    marginBottom: "10px",
+                }}>
+                Total Earning Summary
+            </Typography>
+            <ResponsiveContainer width="100%" height={190}>
                 <AreaChart
                     data={data}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
@@ -86,15 +99,36 @@ function EarningSummarySkeleton() {
         { name: "Dec", thisYear: 0, lastYear: 0 },
     ];
     return (
-        <Box sx={{ backgroundColor: "white", padding: "10px" }}>
-            <ResponsiveContainer width="100%" height={210}>
+        <Box
+            sx={{
+                backgroundColor: "white",
+                padding: "10px",
+                position: "relative",
+            }}>
+            <CircularProgress
+                sx={{
+                    zIndex: 100,
+                    position: "absolute",
+                    top: "40%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                }}
+            />
+            <Typography
+                sx={{
+                    textAlign: "center",
+                    color: "text.secondary",
+                    marginBottom: "10px",
+                }}>
+                Total Earning Summary
+            </Typography>
+            <ResponsiveContainer width="100%" height={190} style={{}}>
                 <AreaChart
                     data={data}
                     margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
                     <YAxis />
-                    <Tooltip />
                     <Area
                         type="monotone"
                         dataKey="thisYear"
