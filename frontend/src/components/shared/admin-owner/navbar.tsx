@@ -2,8 +2,9 @@ import useUIStore from "@/store/useUIStore";
 import { Box, Stack, Typography, IconButton, Breadcrumbs } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useAuth } from "@/context/auth-provider";
-import { Role_Enum } from "@/types";
+import { OwnerStatus_Enum, Role_Enum } from "@/types";
 import { useLocation } from "react-router-dom";
+import { Can } from "@/context/ability-provider";
 export default function NavBar() {
     const { openSideBar, isMinScreen } = useUIStore();
     const { user } = useAuth();
@@ -42,12 +43,16 @@ export default function NavBar() {
                     height: "60px",
                     width: "100%",
                     borderRadius: "10px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                 }}>
                 <Stack
                     direction={"row"}
                     sx={{
                         alignItems: "center",
                         gap: "10px",
+                        flexGrow: 1,
                     }}>
                     {isMinScreen && (
                         <IconButton onClick={openSideBar}>
@@ -91,6 +96,38 @@ export default function NavBar() {
                         </IconButton>
                     )}
                 </Stack>
+                <Can I="show" a="owner-status">
+                    <Box
+                        sx={{
+                            gap: "2px",
+                            backgroundColor:
+                                user?.status === OwnerStatus_Enum.ACTIVE
+                                    ? "#DAF2DA"
+                                    : "#FFCCD9",
+                            borderRadius: "10px",
+                            paddingInline: "1%",
+                            paddingBlock:
+                                user?.status === OwnerStatus_Enum.ACTIVE
+                                    ? ""
+                                    : "1%",
+                        }}>
+                        <Typography
+                            sx={{
+                                minWidth: "58px",
+                                textAlign: "center",
+                                fontSize: "14px",
+
+                                color:
+                                    user?.status === OwnerStatus_Enum.ACTIVE
+                                        ? "#008000"
+                                        : "#FF003F",
+                            }}>
+                            {user?.status === OwnerStatus_Enum.ACTIVE
+                                ? "Active"
+                                : "Your account is Disabled!!!"}
+                        </Typography>
+                    </Box>
+                </Can>
             </Box>
         </Box>
     );

@@ -20,9 +20,7 @@ export default function SignIn() {
         const payload = { email: values.email, password: values.password };
         try {
             const data = await loginUserMuation(payload);
-            console.log("Login Response:", data);
             const user = data.user;
-            console.log("Setting user:", user);
             setUser(user);
             setIsAuthenticated(true);
             toast.success("Successfully logged in");

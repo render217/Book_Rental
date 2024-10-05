@@ -5,7 +5,7 @@ import {
     MongoAbility,
 } from "@casl/ability";
 
-export type Actions = "access-route";
+export type Actions = "access-route" | "manage" | "show";
 export type Subjects =
     | "admin-owner-layout"
     | "renter-layout"
@@ -14,7 +14,9 @@ export type Subjects =
     | "settings"
     | "book-catalogs"
     | "owners"
-    | "upload-book";
+    | "upload-book"
+    | "book-inventory"
+    | "owner-status";
 
 export type AppAbility = MongoAbility<[Actions, Subjects]>;
 export const AppAbility = createMongoAbility as () => MongoAbility<
@@ -27,7 +29,9 @@ export const defaultAbility = () => {
 };
 
 export const defineAbilitiesFor = async (user: IUser) => {
-    const { can, build } = new AbilityBuilder<AppAbility>(createMongoAbility);
+    const { can, build, cannot } = new AbilityBuilder<AppAbility>(
+        createMongoAbility
+    );
 
     // Define abilities based on user role
     if (user.role === Role_Enum.ADMIN) {
@@ -37,6 +41,8 @@ export const defineAbilitiesFor = async (user: IUser) => {
         can("access-route", "settings");
         can("access-route", "book-catalogs");
         can("access-route", "owners");
+
+        cannot("manage", "book-inventory");
     }
 
     if (user.role === Role_Enum.OWNER) {
@@ -45,6 +51,9 @@ export const defineAbilitiesFor = async (user: IUser) => {
         can("access-route", "notifications");
         can("access-route", "settings");
         can("access-route", "upload-book");
+
+        can("manage", "book-inventory");
+        can("show", "owner-status");
     }
 
     if (user.role === Role_Enum.RENTER) {

@@ -1,4 +1,7 @@
-import { IBookStatus, Role_Enum } from "@/types";
+import {
+    IBookStatus,
+    // Role_Enum
+} from "@/types";
 import {
     Button,
     Dialog,
@@ -24,18 +27,21 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-toastify";
 import { handleError } from "@/utils/error-utils";
-import { useAuth } from "@/context/auth-provider";
+// import { useAuth } from "@/context/auth-provider";
+import { Can } from "@/context/ability-provider";
 export default function BookStatusAction({ book }: { book: IBookStatus }) {
-    const { user } = useAuth();
-    if (user.role === Role_Enum.ADMIN) {
-        return null;
-    }
+    // const { user } = useAuth();
+    // if (user.role === Role_Enum.ADMIN) {
+    //     return null;
+    // }
     return (
         <>
-            <Stack direction="row" spacing={2} justifyContent="center">
-                <EditBook book={book} />
-                <DeleteBook book={book} />
-            </Stack>
+            <Can I="manage" a="book-inventory">
+                <Stack direction="row" spacing={2} justifyContent="center">
+                    <EditBook book={book} />
+                    <DeleteBook book={book} />
+                </Stack>
+            </Can>
         </>
     );
 }
