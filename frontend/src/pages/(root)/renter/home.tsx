@@ -6,7 +6,7 @@ import { useState } from "react";
 
 export default function Home() {
     const [search, setSearch] = useState("");
-    const { data, isLoading } = useBooksCatalog(search);
+    const { data: { data = [] } = {}, isLoading } = useBooksCatalog(search);
 
     const booksData = data || [];
 

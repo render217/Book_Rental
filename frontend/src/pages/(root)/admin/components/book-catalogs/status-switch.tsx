@@ -48,7 +48,7 @@ export default function StatusSwitch({
                     fontSize: "14px",
                     color: isActive ? "#008000" : "#FF003F",
                 }}>
-                {isActive ? "Active" : "Deactive"}
+                {isActive ? "Approved" : "Rejected"}
             </Typography>
 
             <Switch

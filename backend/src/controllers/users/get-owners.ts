@@ -104,6 +104,6 @@ const getOwners = async (req: Request, res: Response) => {
         },
     };
 
-    res.status(200).json(mappedOwners);
+    res.status(200).json(payload);
 };
 export default getOwners;

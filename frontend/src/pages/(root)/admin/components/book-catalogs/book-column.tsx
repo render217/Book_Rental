@@ -1,6 +1,4 @@
-import {
-    createMRTColumnHelper, // <--- import createMRTColumnHelper
-} from "material-react-table";
+import { createMRTColumnHelper } from "material-react-table";
 import { BookCatalogType } from "./book-catalog-type";
 import { Typography } from "@mui/material";
 // import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -10,8 +8,14 @@ const columnHelper = createMRTColumnHelper<BookCatalogType>();
 export const bookColumns = [
     columnHelper.display({
         header: "No",
-        size: 10,
+        size: 5,
         enableGlobalFilter: false,
+        enableColumnFilter: false,
+        enableColumnActions: false,
+        muiTableHeadCellProps: {
+            align: "center",
+        },
+
         Cell: ({ row }) => {
             return (
                 <Typography sx={{ textAlign: "center" }}>
@@ -61,6 +65,10 @@ export const bookColumns = [
     }),
     columnHelper.accessor("uploader.username", {
         header: "Uploader",
+        enableColumnFilter: false,
+        enableGlobalFilter: false,
+        enableColumnActions: false,
+        enableSorting: false,
         maxSize: 20,
         Cell: ({ row }) => {
             const uploader =
@@ -75,6 +83,8 @@ export const bookColumns = [
     columnHelper.accessor("status", {
         header: "Status",
         maxSize: 20,
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
         Cell: ({ row }) => {
             return (
                 <StatusSwitch

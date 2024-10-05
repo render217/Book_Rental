@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useState } from "react";
 import { useDeleteOwner } from "@/services/react-query/queries";
 import { toast } from "react-toastify";
+import { handleError } from "@/utils/error-utils";
 export default function OwnerActions({ owner }: { owner: IOwner }) {
     return (
         <>
@@ -109,7 +110,7 @@ function DeleteOwner({ owner }: { owner: IOwner }) {
             toast.success("Owner deleted successfully");
             setOpen(false);
         } catch (error) {
-            console.log(error);
+            handleError(error);
         }
     };
     const handleCancel = () => {

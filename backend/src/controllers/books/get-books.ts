@@ -13,7 +13,7 @@ const getBooks = async (req: Request, res: Response) => {
 
     // PAGINATION
     let startQuery = Number(start) || 0;
-    let sizeQuery = Number(size) || 10;
+    let sizeQuery = size === "infinity" ? undefined : Number(size) || 10;
 
     // COLUMN SORTING
     let sortingQuery: Prisma.BookCatalogOrderByWithRelationInput[] = [];
@@ -114,7 +114,7 @@ const getBooks = async (req: Request, res: Response) => {
             totalRowCount,
         },
     };
-    res.status(200).json(mappedBooks);
+    res.status(200).json(payload);
 };
 
 export default getBooks;

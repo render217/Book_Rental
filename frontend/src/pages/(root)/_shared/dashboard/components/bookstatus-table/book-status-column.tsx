@@ -13,6 +13,8 @@ export const bookStatusColumns = [
         header: "No",
         size: 10,
         enableGlobalFilter: false,
+        enableColumnFilter: false,
+        enableColumnActions: false,
         muiTableHeadCellProps: {
             align: "center",
         },
@@ -29,6 +31,7 @@ export const bookStatusColumns = [
     }),
     columnHelper.accessor("owner.username", {
         header: "Owner",
+        id: "username",
         size: 10,
         Cell: ({ row }) => {
             return <OwnerColumnName ownerName={row.original.owner.username} />;
@@ -50,6 +53,8 @@ export const bookStatusColumns = [
     }),
     columnHelper.accessor("totalCopies", {
         header: "Total",
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
         size: 10,
         Cell: ({ row }) => {
             return (
@@ -61,6 +66,9 @@ export const bookStatusColumns = [
     }),
     columnHelper.accessor("availableCopies", {
         header: "Avaliable",
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
+
         size: 5,
         Cell: ({ row }) => {
             const value = row.original.availableCopies;
@@ -79,6 +87,8 @@ export const bookStatusColumns = [
     columnHelper.accessor("rentedCopies", {
         header: "Rented",
         size: 5,
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
 
         Cell: ({ row }) => {
             const color = "#FF0000";
@@ -97,6 +107,8 @@ export const bookStatusColumns = [
     columnHelper.accessor("pricePerDay", {
         header: "Price/Day",
         size: 5,
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
         Cell: ({ row }) => {
             return (
                 <Typography sx={{ fontSize: "14px" }}>
@@ -108,6 +120,9 @@ export const bookStatusColumns = [
     columnHelper.display({
         header: "Action",
         size: 40,
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
+        enableColumnActions: false,
         Cell: ({ row }) => {
             const book = row.original;
             return <BookStatusAction book={book} />;

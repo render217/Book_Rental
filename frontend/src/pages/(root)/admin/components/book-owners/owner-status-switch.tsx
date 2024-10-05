@@ -41,7 +41,7 @@ export default function OwnerStatusSwitch({
                     fontSize: "14px",
                     color: isActive ? "#008000" : "#FF003F",
                 }}>
-                {isActive ? "Active" : "Deactive"}
+                {isActive ? "Active" : "Disabled"}
             </Typography>
 
             <Switch

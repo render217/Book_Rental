@@ -1,8 +1,16 @@
+import { IBookStatus } from "@/types";
 import apiClient from "./apiClient";
+
+type BookStatusApiResponse = {
+    data: IBookStatus[];
+    meta: {
+        totalRowCount: number;
+    };
+};
 
 export const getBooksInventory = async (query = "") => {
     const q = query ? `?q=${query}` : "";
-    const res = await apiClient.get(`/inventory${q}`);
+    const res = await apiClient.get<BookStatusApiResponse>(`/inventory${q}`);
     return res.data;
 };
 

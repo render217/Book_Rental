@@ -20,7 +20,7 @@ export default function BookAutoCompeleteInput({
     error?: { message?: string };
 }) {
     const [open, setOpen] = useState(false);
-    const { data } = useBooksCatalog();
+    const { data: { data = [] } = {} } = useBooksCatalog();
 
     const booksCatalogData = data ?? [];
 

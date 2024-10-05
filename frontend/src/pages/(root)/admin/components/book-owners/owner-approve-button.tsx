@@ -1,4 +1,5 @@
 import { useApproveOwner } from "@/services/react-query/queries";
+import { handleError } from "@/utils/error-utils";
 import { Button } from "@mui/material";
 
 export default function OwnerApproveButton({
@@ -12,7 +13,11 @@ export default function OwnerApproveButton({
 
     const handleApprove = async () => {
         if (isPending) return;
-        await mutateAsync(ownerId);
+        try {
+            await mutateAsync(ownerId);
+        } catch (error) {
+            handleError(error);
+        }
     };
     return (
         <>

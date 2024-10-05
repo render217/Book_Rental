@@ -1,6 +1,4 @@
-import {
-    createMRTColumnHelper, // <--- import createMRTColumnHelper
-} from "material-react-table";
+import { createMRTColumnHelper } from "material-react-table";
 
 import { Typography } from "@mui/material";
 // import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -16,6 +14,8 @@ export const ownerColumns = [
         header: "No",
         size: 5,
         enableGlobalFilter: false,
+        enableColumnFilter: false,
+        enableColumnActions: false,
         muiTableHeadCellProps: {
             align: "center",
         },
@@ -31,12 +31,12 @@ export const ownerColumns = [
     columnHelper.accessor("username", {
         header: "Owner",
         size: 20,
-        muiTableHeadCellProps: {
-            align: "center",
-        },
-        muiTableBodyCellProps: {
-            align: "center",
-        },
+        // muiTableHeadCellProps: {
+        //     align: "center",
+        // },
+        // muiTableBodyCellProps: {
+        //     align: "center",
+        // },
         Cell: ({ row }) => {
             return (
                 <Typography sx={{ fontSize: "14px" }}>
@@ -58,12 +58,12 @@ export const ownerColumns = [
     columnHelper.accessor("location", {
         header: "Location",
         size: 10,
-        muiTableHeadCellProps: {
-            align: "center",
-        },
-        muiTableBodyCellProps: {
-            align: "center",
-        },
+        // muiTableHeadCellProps: {
+        //     align: "center",
+        // },
+        // muiTableBodyCellProps: {
+        //     align: "center",
+        // },
         Cell: ({ row }) => {
             return (
                 <Typography sx={{ fontSize: "14px" }}>
@@ -75,12 +75,19 @@ export const ownerColumns = [
     columnHelper.accessor("status", {
         header: "Status",
         size: 10,
-        muiTableHeadCellProps: {
-            align: "center",
-        },
+        // muiTableHeadCellProps: {
+        //     align: "center",
+        // },
         muiTableBodyCellProps: {
             align: "center",
+            sx: {
+                paddingInline: "1%",
+            },
         },
+        enableGlobalFilter: false,
+        enableColumnFilter: false,
+        enableColumnActions: false,
+        enableSorting: false,
         Cell: ({ row }) => {
             return (
                 <OwnerStatusSwitch

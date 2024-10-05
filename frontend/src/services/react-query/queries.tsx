@@ -125,7 +125,7 @@ export const useDeleteOwner = () => {
 
 export const useBooksCatalog = (query = "") => {
     return useQuery({
-        queryKey: [QUERY_KEYS.GET_BOOKS_CATALOG, { query }],
+        queryKey: [QUERY_KEYS.GET_BOOKS_CATALOG_RENTER, { query }],
         queryFn: async () => await getBookCatalogs(query),
         placeholderData: keepPreviousData,
     });
@@ -133,7 +133,7 @@ export const useBooksCatalog = (query = "") => {
 
 export const useGetBookCatalogDetail = (id: string) => {
     return useQuery({
-        queryKey: [QUERY_KEYS.GET_BOOKS_CATALOG, { id }],
+        queryKey: [QUERY_KEYS.GET_BOOKS_CATALOG_RENTER, { id }],
         queryFn: async () => await getBookCatalogDetail(id),
         enabled: !!id,
         placeholderData: keepPreviousData,

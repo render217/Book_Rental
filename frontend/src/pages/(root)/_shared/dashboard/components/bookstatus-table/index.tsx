@@ -1,21 +1,96 @@
 import {
     MaterialReactTable,
     useMaterialReactTable,
+    type MRT_ColumnFiltersState,
+    type MRT_PaginationState,
+    type MRT_SortingState,
 } from "material-react-table";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { Box, IconButton, Tooltip } from "@mui/material";
 import { bookStatusColumns } from "./book-status-column";
-import { useGetBooksInventory } from "@/services/react-query/queries";
+
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { QUERY_KEYS } from "@/services/react-query/queryKeys";
+import apiClient from "@/services/apiClient";
+import { IBookStatus } from "@/types";
+
+type BookStatusApiResponse = {
+    data: IBookStatus[];
+    meta: {
+        totalRowCount: number;
+    };
+};
+
 export default function BookStatusTable() {
-    const { data, refetch } = useGetBooksInventory();
-    const bookStatusData = data ?? [];
+    const [columnFilters, setColumnFilters] = useState<MRT_ColumnFiltersState>(
+        []
+    );
+    const [globalFilter, setGlobalFilter] = useState("");
+    const [sorting, setSorting] = useState<MRT_SortingState>([]);
+    const [pagination, setPagination] = useState<MRT_PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    });
+
+    const {
+        data: { data = [], meta } = {},
+        isError,
+        isRefetching,
+        isLoading,
+        refetch,
+    } = useQuery<BookStatusApiResponse>({
+        queryKey: [
+            QUERY_KEYS.GET_BOOKS_INVENTORY,
+            columnFilters,
+            globalFilter,
+            sorting,
+            pagination.pageIndex,
+            pagination.pageSize,
+        ],
+        queryFn: async () => {
+            const params = {
+                start: `${pagination.pageIndex * pagination.pageSize}`,
+                size: `${pagination.pageSize}`,
+                filters: JSON.stringify(columnFilters ?? []),
+                globalFilter: globalFilter ?? "",
+                sorting: JSON.stringify(sorting ?? []),
+            };
+
+            const res = await apiClient.get("/inventory", { params });
+            return res.data as BookStatusApiResponse;
+        },
+        placeholderData: keepPreviousData,
+    });
+
     const table = useMaterialReactTable({
         columns: bookStatusColumns,
-        data: bookStatusData,
+        data: data,
         enableRowSelection: false,
         enableColumnOrdering: false,
         enableDensityToggle: false,
         enableGlobalFilter: true,
+        enableColumnResizing: false,
+
+        //turn of client-side sorting , pagination and filtering
+        manualFiltering: true,
+        manualPagination: true,
+        manualSorting: true,
+
+        initialState: { density: "compact" },
+
+        onColumnFiltersChange: setColumnFilters,
+        onGlobalFilterChange: setGlobalFilter,
+        onPaginationChange: setPagination,
+        onSortingChange: setSorting,
+
+        muiToolbarAlertBannerProps: isError
+            ? {
+                  color: "error",
+                  children: "Error loading data",
+              }
+            : undefined,
+
         defaultDisplayColumn: {
             size: 20,
             minSize: 20,
@@ -34,9 +109,6 @@ export default function BookStatusTable() {
             showLastButton: false,
         },
 
-        enableColumnResizing: false,
-
-        initialState: { density: "compact" },
         renderTopToolbarCustomActions: () => (
             <Tooltip arrow title="Refresh Data">
                 <IconButton onClick={() => refetch()}>
@@ -44,6 +116,17 @@ export default function BookStatusTable() {
                 </IconButton>
             </Tooltip>
         ),
+        rowCount: meta?.totalRowCount ?? 0,
+
+        state: {
+            columnFilters,
+            globalFilter,
+            isLoading,
+            pagination,
+            showAlertBanner: isError,
+            showProgressBars: isRefetching,
+            sorting,
+        },
     });
     return (
         <Box sx={{ paddingInline: "5px" }}>

@@ -6,6 +6,7 @@ export enum QUERY_KEYS {
 
     // BOOK CATALOG KEYS
     GET_BOOKS_CATALOG = "getBooksCatalog",
+    GET_BOOKS_CATALOG_RENTER = "getBooksCatalogForRenter",
     GET_BOOKS_STATISTICS = "getBooksStatistics",
 
     // BOOK INVENTORY KEYS
