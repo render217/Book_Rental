@@ -4,6 +4,7 @@ import {
 } from "@/types";
 import {
     Button,
+    CircularProgress,
     Dialog,
     DialogContent,
     FormControlLabel,
@@ -100,7 +101,12 @@ function EditBook({ book }: { book: IBookStatus }) {
                     }}
                 />
             </IconButton>
-            <Dialog open={openDialog} onClose={() => setOpenDialog(false)}>
+            <Dialog
+                open={openDialog}
+                onClose={() => {
+                    if (isPending) return;
+                    setOpenDialog(false);
+                }}>
                 {/* <DialogTitle>Hello</DialogTitle> */}
                 <DialogContent
                     sx={{
@@ -161,7 +167,11 @@ function EditBook({ book }: { book: IBookStatus }) {
                                 width: "100%",
                                 marginInline: "auto",
                             }}>
-                            Update
+                            {isPending ? (
+                                <CircularProgress color="inherit" size={16} />
+                            ) : (
+                                "Update"
+                            )}
                         </Button>
                     </form>
                 </DialogContent>
@@ -244,7 +254,12 @@ function DeleteBook({ book }: { book: IBookStatus }) {
                     }}
                 />
             </IconButton>
-            <Dialog open={open} onClose={() => setOpen(false)}>
+            <Dialog
+                open={open}
+                onClose={() => {
+                    if (isPending) return;
+                    setOpen(false);
+                }}>
                 <DialogContent
                     sx={{
                         padding: "20px",
@@ -321,6 +336,7 @@ function DeleteBook({ book }: { book: IBookStatus }) {
                                 gap: "20px",
                             }}>
                             <Button
+                                disabled={isPending}
                                 onClick={handleCancel}
                                 sx={{
                                     padding: "5px",
@@ -339,7 +355,14 @@ function DeleteBook({ book }: { book: IBookStatus }) {
                                     backgroundColor: "#00ABFF",
                                     width: "200px",
                                 }}>
-                                Procceed
+                                {isPending ? (
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={20}
+                                    />
+                                ) : (
+                                    "Procceed"
+                                )}
                             </Button>
                         </Stack>
                     </form>

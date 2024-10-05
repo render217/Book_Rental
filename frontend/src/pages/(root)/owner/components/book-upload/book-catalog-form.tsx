@@ -10,6 +10,7 @@ import {
     FormControl,
     TextField,
     Typography,
+    CircularProgress,
 } from "@mui/material";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -153,7 +154,14 @@ export default function BookCatalogForm({
                                     marginInline: "auto",
                                     py: "12px",
                                 }}>
-                                Add
+                                {isPending ? (
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={16}
+                                    />
+                                ) : (
+                                    "Add"
+                                )}
                             </Button>
                         </form>
                     </DialogContent>

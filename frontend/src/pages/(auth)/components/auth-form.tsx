@@ -3,6 +3,7 @@ import {
     Box,
     Button,
     Checkbox,
+    CircularProgress,
     Divider,
     FormControlLabel,
     Grid2,
@@ -332,7 +333,14 @@ export default function AuthForm({
                             size="large"
                             variant="contained"
                             color="primary">
-                            {isSignUp ? "SIGN UP" : "LOGIN"}
+                            {!isFormSubmitting
+                                ? isSignUp
+                                    ? "Sign Up"
+                                    : "Sign In"
+                                : null}
+                            {isFormSubmitting && (
+                                <CircularProgress color="inherit" size={26} />
+                            )}
                         </Button>
                     </Stack>
                     <Stack spacing={2} direction="row" justifyContent="center">

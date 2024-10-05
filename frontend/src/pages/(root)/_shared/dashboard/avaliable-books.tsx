@@ -3,7 +3,13 @@ import {
     // useBookCatalogStatistics,
     useGetBooksInventoryStatistics,
 } from "@/services/react-query/queries";
-import { Box, Stack, Typography } from "@mui/material";
+import {
+    Box,
+    CircularProgress,
+    Divider,
+    Stack,
+    Typography,
+} from "@mui/material";
 import AvaliableBooksView from "./components/avaliable-books/avaliable-books-view";
 // import { useAuth } from "@/context/auth-provider";
 // import { Role_Enum } from "@/types";
@@ -31,7 +37,7 @@ export default function AvaliableBooks() {
     const data = booksInventoryData;
 
     if (isLoading) {
-        return null;
+        return <AvailableBooksSkeleton />;
     }
     return (
         <Box
@@ -68,6 +74,59 @@ export default function AvaliableBooks() {
             </Stack>
             {/* @ts-ignore */}
             <AvaliableBooksView data={data} isLoading={isLoading} />
+        </Box>
+    );
+}
+
+function AvailableBooksSkeleton() {
+    return (
+        <Box
+            sx={{
+                borderRadius: "5px",
+                backgroundColor: "white",
+                padding: "20px",
+                marginBottom: "4px",
+                minHeight: "150px",
+            }}>
+            <Stack
+                direction="row"
+                justifyContent="space-between"
+                alignItems="center">
+                <Typography
+                    fontSize="16px"
+                    color="#656575"
+                    variant="h6"
+                    component="h1">
+                    AvaliableBooks
+                </Typography>
+                <Box>
+                    <Typography
+                        variant="body2"
+                        component="p"
+                        sx={{
+                            padding: "2px",
+                            paddingInline: "10px",
+                            backgroundColor: "#F8F7F1",
+                            border: "1px solid #E0E0E0",
+                        }}>
+                        Today
+                    </Typography>
+                </Box>
+            </Stack>
+            <Divider
+                sx={{
+                    marginTop: "8px",
+                    marginBottom: "8px",
+                }}
+            />
+            <Box
+                sx={{
+                    minHeight: "100px",
+                    display: "grid",
+                    placeContent: "center",
+                }}>
+                <CircularProgress />
+            </Box>
         </Box>
     );
 }

@@ -4,6 +4,7 @@ import { Box, Switch, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
 import { handleError } from "@/utils/error-utils";
+import { toast } from "react-toastify";
 export default function OwnerStatusSwitch({
     ownerId,
     status,
@@ -13,15 +14,18 @@ export default function OwnerStatusSwitch({
 }) {
     const { mutateAsync: updateStatus, isPending } =
         useActivateDeactivateOwner();
+
+    const isActive = status === OwnerStatus_Enum.ACTIVE;
+
     const handleToggle = async () => {
         try {
             await updateStatus(ownerId);
+            const msg = isActive ? "disabled" : "activated";
+            toast.success(`Owner is ${msg} successfully`);
         } catch (error) {
             handleError(error);
         }
     };
-
-    const isActive = status === OwnerStatus_Enum.ACTIVE;
 
     return (
         <Box

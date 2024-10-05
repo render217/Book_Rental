@@ -104,6 +104,11 @@ export default function NavBar() {
                                 user?.status === OwnerStatus_Enum.ACTIVE
                                     ? "#DAF2DA"
                                     : "#FFCCD9",
+                            visibility:
+                                user?.status === OwnerStatus_Enum.ACTIVE
+                                    ? "hidden"
+                                    : "visible",
+
                             borderRadius: "10px",
                             paddingInline: "1%",
                             paddingBlock:

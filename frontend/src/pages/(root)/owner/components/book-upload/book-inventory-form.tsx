@@ -1,4 +1,4 @@
-import { Box, Button, Grid2, TextField } from "@mui/material";
+import { Box, Button, CircularProgress, Grid2, TextField } from "@mui/material";
 import BookAutoCompeleteInput from "./book-autocomplete-input";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -111,7 +111,11 @@ export default function BookInventoryForm() {
                         width: "100%",
                         marginInline: "auto",
                     }}>
-                    Submit
+                    {isPending ? (
+                        <CircularProgress color="inherit" size={16} />
+                    ) : (
+                        "Submit"
+                    )}
                 </Button>
             </form>
         </Box>
