@@ -5,53 +5,81 @@ import { Role, ApprovalStatus, Prisma } from "@prisma/client";
 import { accessibleBy } from "@casl/prisma";
 const getBooks = async (req: Request, res: Response) => {
     const user = req.user!;
-    const { q } = req.query;
+    const { globalFilter, start, size, filters, sorting } = req.query;
 
-    // Create search filters based on 'q'
-    const filters:
-        | Prisma.BookCatalogWhereInput
-        | Prisma.BookCatalogWhereInput[] = {
-        AND: [accessibleBy(req.ability).BookCatalog],
-    };
+    // let sorting = [{ id: "author", desc: false }];
+    // let filters = [{ id: "title", value: "something" }];
+    // let globalFilter = "something";
 
-    if (q) {
-        filters.OR = [
+    // PAGINATION
+    let startQuery = Number(start) || 0;
+    let sizeQuery = Number(size) || 10;
+
+    // COLUMN SORTING
+    let sortingQuery: Prisma.BookCatalogOrderByWithRelationInput[] = [];
+
+    if (sorting) {
+        sortingQuery = JSON.parse(sorting as string).map((sort: any) => ({
+            [sort.id]: sort.desc ? "desc" : "asc",
+        }));
+    }
+
+    // COLUMN FILTER
+    let filtersQuery: Prisma.BookCatalogWhereInput[] = [];
+
+    if (filters) {
+        filtersQuery = JSON.parse(filters as string).map(
+            (filter: { id: string; value: string }) => ({
+                [filter.id]: {
+                    contains: filter.value,
+                    mode: "insensitive",
+                },
+            })
+        );
+    }
+
+    // GLOBAL SEARCH
+    let globalFilteringQuery: Prisma.BookCatalogWhereInput[] = [];
+
+    if (globalFilter) {
+        globalFilteringQuery = [
             {
                 title: {
-                    contains: q as string,
+                    contains: globalFilter as string,
                     mode: "insensitive",
                 },
             },
             {
                 author: {
-                    contains: q as string,
+                    contains: globalFilter as string,
                     mode: "insensitive",
                 },
             },
             {
                 category: {
-                    contains: q as string,
+                    contains: globalFilter as string,
                     mode: "insensitive",
                 },
             },
         ];
     }
 
-    // ABILITY USED INSTEAD..
+    const where: Prisma.BookCatalogWhereInput = {
+        AND: [
+            accessibleBy(req.ability).BookCatalog,
+            ...filtersQuery,
+            ...(globalFilteringQuery.length > 0
+                ? [{ OR: globalFilteringQuery }]
+                : []),
+        ],
+    };
 
-    // if (user.role === Role.RENTER || user.role === Role.OWNER) {
-    //     // For renters or owners, only return books that are approved
-    //     if (Array.isArray(filters.AND)) {
-    //         filters.AND.push({
-    //             status: ApprovalStatus.APPROVED,
-    //         });
-    //     } else {
-    //         filters.AND = [{ status: ApprovalStatus.APPROVED }];
-    //     }
-    // }
+    const totalRowCount = await prisma.bookCatalog.count({
+        where,
+    });
 
     const books = await prisma.bookCatalog.findMany({
-        where: filters,
+        where: where,
         include: {
             uploader: {
                 include: {
@@ -59,12 +87,12 @@ const getBooks = async (req: Request, res: Response) => {
                 },
             },
         },
-        orderBy: {
-            createdAt: "desc",
-        },
+        skip: startQuery,
+        take: sizeQuery,
+        orderBy: sortingQuery,
     });
 
-    // Map books data based on user role
+    // Map books data
     const mappedBooks = books.map((book) => {
         const bookData: any = {
             id: book.bookId,
@@ -72,19 +100,20 @@ const getBooks = async (req: Request, res: Response) => {
             author: book.author,
             category: book.category,
             status: book.status,
-        };
-
-        // Only include status and uploader for admin
-        if (user.role === Role.ADMIN) {
-            bookData.status = book.status;
-            bookData.uploader = book.uploader
+            uploader: book.uploader
                 ? mapOwnerToUser(book.uploader, book.uploader.account)
-                : null;
-        }
-
+                : null,
+        };
         return bookData;
     });
 
+    // return response.
+    const payload = {
+        data: mappedBooks,
+        meta: {
+            totalRowCount,
+        },
+    };
     res.status(200).json(mappedBooks);
 };
 

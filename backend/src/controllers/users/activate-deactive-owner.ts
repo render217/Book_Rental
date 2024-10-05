@@ -25,7 +25,9 @@ const activateDeactivateOwner = async (req: Request, res: Response) => {
     }
 
     if (!targetOwner.isApproved) {
-        return res.status(400).json({ message: "Owner not approved yet" });
+        return res
+            .status(400)
+            .json({ message: "You need to approve owner first" });
     }
 
     const updatedOwner = await prisma.owner.update({

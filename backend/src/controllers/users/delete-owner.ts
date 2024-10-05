@@ -20,6 +20,20 @@ const deleteOwner = async (req: Request, res: Response) => {
         return res.status(404).json({ message: "Owner not found" });
     }
 
+    // Check if the owner has any books in their inventory
+    const inventoryCount = await prisma.bookInventory.count({
+        where: {
+            ownerId: ownerId,
+        },
+    });
+
+    if (inventoryCount > 0) {
+        return res.status(400).json({
+            message:
+                "Cannot delete owner with existing inventory\n Disable the owner if you want to delete ",
+        });
+    }
+
     await prisma.$transaction([
         prisma.owner.delete({
             where: { ownerId },
@@ -31,6 +45,8 @@ const deleteOwner = async (req: Request, res: Response) => {
             where: { ownerId },
         }),
     ]);
+
+    return res.status(200).json({ message: "Successfully deleted" });
 };
 
 export default deleteOwner;
