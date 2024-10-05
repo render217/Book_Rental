@@ -23,7 +23,9 @@ const getOwners = async (req: Request, res: Response) => {
     if (sorting) {
         sortingQuery = JSON.parse(sorting as string).map(
             (sort: { id: string; desc: boolean }) => ({
-                [sort.id]: sort.desc ? "desc" : "asc",
+                account: {
+                    [sort.id]: sort.desc ? "desc" : "asc",
+                },
             })
         );
     }
