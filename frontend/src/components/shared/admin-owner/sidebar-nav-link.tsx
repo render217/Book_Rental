@@ -14,7 +14,7 @@ export default function SideBarNavLink({
     path,
     name,
 }: INavItem) {
-    const { isSideBarCollapsed } = useUIStore();
+    const { isSideBarCollapsed, isMinScreen, closeSideBar } = useUIStore();
     const navigate = useNavigate();
     const location = useLocation();
     const isActive = location.pathname === path;
@@ -26,6 +26,9 @@ export default function SideBarNavLink({
             return;
         }
         navigate(path);
+        if (isMinScreen) {
+            closeSideBar();
+        }
     };
 
     // Function to render the link content

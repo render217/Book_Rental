@@ -76,7 +76,10 @@ export default function RevenueCard({ data }: RevenueCardProps) {
                                 fontSize: "16px",
                                 fontWeight: "400",
                             }}>
-                            {percentageDifference.totalRevenueDifference}%{" "}
+                            {percentageDifference.totalRevenueDifference.toFixed(
+                                2
+                            )}
+                            %{" "}
                             {percentageDifference.totalRevenueDifference > 0
                                 ? "inc"
                                 : "dec"}
@@ -170,7 +173,10 @@ export default function RevenueCard({ data }: RevenueCardProps) {
                                 fontSize: "16px",
                                 fontWeight: "400",
                             }}>
-                            {percentageDifference.totalRentalsDifference}%{" "}
+                            {percentageDifference.totalRentalsDifference.toFixed(
+                                2
+                            )}
+                            %{" "}
                             {percentageDifference.totalRevenueDifference > 0
                                 ? "inc"
                                 : "dec"}

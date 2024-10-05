@@ -3,6 +3,7 @@ import { OwnerStatus_Enum } from "@/types";
 import { Box, Switch, Typography } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import ClearIcon from "@mui/icons-material/Clear";
+import { handleError } from "@/utils/error-utils";
 export default function OwnerStatusSwitch({
     ownerId,
     status,
@@ -13,7 +14,11 @@ export default function OwnerStatusSwitch({
     const { mutateAsync: updateStatus, isPending } =
         useActivateDeactivateOwner();
     const handleToggle = async () => {
-        await updateStatus(ownerId);
+        try {
+            await updateStatus(ownerId);
+        } catch (error) {
+            handleError(error);
+        }
     };
 
     const isActive = status === OwnerStatus_Enum.ACTIVE;

@@ -18,6 +18,13 @@ const updateBookInventory = async (req: Request, res: Response) => {
         where: {
             bookInventoryId: bookInventoryId,
         },
+        include: {
+            owner: {
+                include: {
+                    account: true,
+                },
+            },
+        },
     });
 
     if (!bookInventory) {
